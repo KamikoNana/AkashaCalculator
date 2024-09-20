@@ -1,0 +1,158 @@
+import ghg_database
+
+from Entity.WasteTreatm.waste_treatm_entity import WasteTreatment
+from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+
+class WasteTreatmentCalculations():
+    def __init__(self):
+        self
+        
+    def total_emissions_waste_all():
+        total_emissions_waste = 0
+        emissions_waste =[]
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            total_emissions_waste = total_emissions_waste + \
+                WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+            emissions_waste.append([data.treatment, data.stream, \
+                WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
+        
+        return [total_emissions_waste, emissions_waste]
+    
+    def total_emissions_waste_type(type):
+        total_emissions_waste = 0
+        emissions_waste =[]
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            if data.stream == type:
+                
+                total_emissions_waste = total_emissions_waste + \
+                WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+                emissions_waste.append([data.treatment, data.stream, \
+                WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
+        
+        return [total_emissions_waste, emissions_waste]
+    
+    def phase_emissions_waste_all():
+        construction_emissions_waste = 0
+        operation_emissions_waste = 0
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            if data.phase == "CONSTRUCTION":
+                construction_emissions_waste = construction_emissions_waste +\
+                    WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+            elif data.phase == "OPERATION":
+                operation_emissions_waste = operation_emissions_waste + \
+                    WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+            else:
+                pass
+            
+        return [construction_emissions_waste, operation_emissions_waste]
+    
+    def phase_emissions_waste_type(type):
+        construction_emissions_waste = 0
+        operation_emissions_waste = 0
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            if data.type == type:
+                
+                if data.phase == "CONSTRUCTION":
+                    construction_emissions_waste = construction_emissions_waste +\
+                    WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+                elif data.phase == "OPERATION":
+                    operation_emissions_waste = operation_emissions_waste + \
+                    WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
+                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+                else:
+                    pass
+                
+        return [construction_emissions_waste, operation_emissions_waste]
+    
+    def total_emissions_peryear_waste_all():
+        project_duration = ProjectPhasesService.project_duration()
+        
+        total_emissions_peryear_construction = [0] * project_duration[0]
+        total_emissions_peryear_operation = [0] * project_duration[1]
+        
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            if data.phase == "CONSTRUCTION":
+                CO2_totalemissions = data.quantity * data.co2_emissions 
+                CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
+                N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
+                emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+                
+                for i in range(project_duration[0]):
+                    total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
+                    
+            elif data.phase == "OPERATION":
+                
+                CO2_totalemissions = data.quantity * data.co2_emissions 
+                CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
+                N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
+                emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+                
+                for i in range(project_duration[1]):
+                    total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
+            
+            else:
+                pass
+        
+        total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
+        
+        for i in range(1, project_duration[2]):
+            total_emissions_peryear[i] = total_emissions_peryear[i] + total_emissions_peryear[i-1]
+        
+        return total_emissions_peryear
+    
+    def total_emissions_peryear_waste_type(type):
+        project_duration = ProjectPhasesService.project_duration()
+        
+        total_emissions_peryear_construction = [0] * project_duration[0]
+        total_emissions_peryear_operation = [0] * project_duration[1]
+        
+        for source, data in ghg_database.waste_treatm.items():
+            data = WasteTreatment.waste_from_dict(data)
+            
+            if data.stream == type:
+                
+                if data.phase == "CONSTRUCTION":
+                    CO2_totalemissions = data.quantity * data.co2_emissions 
+                    CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
+                    N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
+                    emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+                
+                    for i in range(project_duration[0]):
+                        total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
+                    
+                elif data.phase == "OPERATION":
+                    
+                    CO2_totalemissions = data.quantity * data.co2_emissions 
+                    CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
+                    N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
+                    emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+                    
+                    for i in range(project_duration[1]):
+                        total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
+                
+                else:
+                    pass
+        
+        total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
+        
+        for i in range(1, project_duration[2]):
+            total_emissions_peryear[i] = total_emissions_peryear[i] + total_emissions_peryear[i-1]
+        
+        return total_emissions_peryear

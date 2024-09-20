@@ -1,0 +1,15 @@
+import app
+
+app.plot_energy_peryear()
+app.plot_fixedcomb_peryear()
+app.plot_mobilecomb_peryear()
+app.plot_materialsprod_peryear()
+app.plot_vehicles_all_peryear()
+app.plot_vehicles_road_peryear()
+app.plot_vehicles_train_peryear()
+app.plot_vehicles_ship_peryear()
+app.plot_vehicles_air_peryear()
+app.plot_waste_all_peryear()
+app.plot_waste_solids_peryear()
+app.plot_waste_water_peryear()
+app.plot_waste_gas_peryear()
