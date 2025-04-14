@@ -2,8 +2,8 @@
 # (area, previous_soiluse, prev_seqfactor, new_soilduse, new_seqfactor)
 
 class SoilUseChange:
-    def __init__(self, name, area, previous_soiluse, prev_seqfactor, new_soiluse, new_seqfactor):
-        self.name = name                            #name of the transaction 
+    def __init__(self, change, area, previous_soiluse, prev_seqfactor, new_soiluse, new_seqfactor):
+        self.change = change                            #name of the transaction 
         self.area = area                            #area that will suffer soil change [m2] (float)
         self.previous_soiluse = previous_soiluse    #previous soil use (str)
         self.prev_seqfactor = prev_seqfactor        #previous soil use CO2 sequestration factor [tCO2/year]
@@ -17,11 +17,11 @@ class SoilUseChange:
         return (new_emissions_seq - prev_emissions_seq)
     
     def to_dict(self):
-        return {"change": self.name, "area": self.area, "previous soil use": self.previous_soiluse, \
-            "previous sequestration factor": self.prev_seqfactor, "new soil use": self.new_soiluse, \
-                "new sequestration factor": self.new_seqfactor}
+        return {"change": self.change, "area": self.area, "previous_soiluse": self.previous_soiluse, \
+            "prev_seqfactor": self.prev_seqfactor, "new_soiluse": self.new_soiluse, \
+                "new_seqfactor": self.new_seqfactor}
         
     @staticmethod
     def soilusechange_from_dict(dict):
-        return SoilUseChange(dict["name"], dict["area"], dict["previous_soiluse"], dict["prev_seqfactor"], \
+        return SoilUseChange(dict["change"], dict["area"], dict["previous_soiluse"], dict["prev_seqfactor"], \
             dict["new_soiluse"], dict["new_seqfactor"])

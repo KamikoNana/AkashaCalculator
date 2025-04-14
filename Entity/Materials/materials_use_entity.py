@@ -10,7 +10,7 @@ class MaterialsUse:
         self.quantity = quantity                    #quantity of material used in total [kg] (float)
         self.ef = ef                      #emission factor of the material production [tCO2eq/kg] (float)
     
-    def total_GHG_emissions(phase, quantity, ef):
+    def total_GHG_emissions(phase, material, quantity, ef):
         if phase == "CONSTRUCTION":
             return quantity * ef * ProjectPhasesService.project_duration()[0]
         elif phase == "OPERATION":

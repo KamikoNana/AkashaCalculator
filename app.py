@@ -122,14 +122,14 @@ def create_objects(xls):
 
     sheet_data = pandas.read_excel(file_path, sheet_name="SOIL_USE_CHANGE")
     for index, row in sheet_data.iloc[1:].iterrows(): 
-        name = row['name']
+        change = row['name']
         area = row['area']
         previous_soiluse = row['prev_soil_use']
         new_soiluse = row['new_soil_use']
         prev_seqfactor = row['prev_seq_factor']
         new_seqfactor = row['new_seq_factor']
         
-        object = SoilUseChange(name, area, previous_soiluse, prev_seqfactor, \
+        object = SoilUseChange(change, area, previous_soiluse, prev_seqfactor, \
                     new_soiluse, new_seqfactor)
         soil_use_change[name] = object.to_dict()
         
@@ -149,7 +149,7 @@ def create_objects(xls):
                     ch4_emissions, ch4_cf, n2o_emissions, n2o_cf)
         waste_treatm[treatment] = object.to_dict()
 
-        
+      
 def create_database():
     data = {
         "project_phases": project_phases,
@@ -174,6 +174,10 @@ def create_database():
 create_objects(xls) 
 create_database()
 
+ #up is all about the database transition
+ ##
+ #bellow about the plots and prepare data to be displayed
+ 
 def plot_energy_peryear():
     years = list(range(1, len(EnergyCalculations.total_emissions_peryear_energy()) + 1))
 
@@ -333,3 +337,62 @@ def plot_waste_gas_peryear():
     plt.ylabel('Cumulative Emissions (tons of CO2e)')
     plt.grid(True)
     plt.show()
+
+#above are defined the plots
+##
+#bellow is presented the number data
+
+def sum_all():
+    energy = EnergyCalculations.total_emissions_energy()[0]
+    vehicles = VehiclesCalculations.total_emissions_vehicles_all()[0]
+    
+    total = energy + vehicles
+    
+    return total
+
+def show_total():
+    print('Total Emissions (units)')
+    print(sum_all())
+    
+def show_energy():
+    print('Emissions Source: ENERGY')
+    print('Energy Emissions (units)')
+    print(EnergyCalculations.total_emissions_energy()[0])
+    print('Energy Emissions Balance')
+    print(EnergyCalculations.GHG_emissions_saved_energy()[0])
+    
+def show_vehicles():
+    print('Emissions Source: VEHICLES')
+    print('All Vehicles Emissions (unites)')
+    print(VehiclesCalculations.total_emissions_vehicles_all()[0])
+    print('Road Vehicles (units)')
+    print(VehiclesCalculations.total_emissions_vehicles_type("ROAD")[0])
+    print('Aircraft Vehicles (units)')
+    print(VehiclesCalculations.total_emissions_vehicles_type("AIR")[0])
+    print('Railway Vehicles (units)')
+    print(VehiclesCalculations.total_emissions_vehicles_type("TRAIN")[0])
+    print('Shipment Vehicles (units)')
+    print(VehiclesCalculations.total_emissions_vehicles_type("SHIP")[0])
+
+def show_materials():
+    print('Emissions Source: MATERIALS')
+    print('Matrials Used (Units)')
+    print(MaterialsUseCalculations.total_emissions_materialsuse()[0])
+    print('Materials Produced (Units)')
+    print(MaterialsProductionCalculations.total_emissions_materialsprod()[0])
+
+def show_soilusechange():
+    print('Emissions Source: SOIL USE CHANGE')
+    print('Soil Use Change Impact (Units)')
+    print(SoilUseChangeCalculations.total_emissions_soilusechange()[0])
+
+def show_wastetreatment():
+    print('Emissions Source: WASTE TREATMENT')
+    print('All waste treatment (Units)')
+    print(WasteTreatmentCalculations.total_emissions_waste_all()[0])
+    print('Solid waste treatment (Units)')
+    print(WasteTreatmentCalculations.total_emissions_peryear_waste_type('SOLID')[0])
+    print('Wastewater treatment (Units)')
+    print(WasteTreatmentCalculations.total_emissions_waste_type('WATER')[0])
+    print('Gas stream treatment (Units)')
+    print(WasteTreatmentCalculations.total_emissions_waste_type('GAS')[0])

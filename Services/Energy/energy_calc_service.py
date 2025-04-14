@@ -51,9 +51,9 @@ class EnergyCalculations():
             if data.type == "CONSUMED":
                 total_consumed = total_consumed + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
                 n_consumed = n_consumed + 1
-        consumed = total_consumed/n_consumed
+            consumed = total_consumed/n_consumed
         
-        for source, data in ghg_database.energy.items(data.phase, data.quantity, data.ef):
+        for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
             if data.type == "PRODUCED":

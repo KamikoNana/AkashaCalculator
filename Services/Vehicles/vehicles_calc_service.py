@@ -28,12 +28,13 @@ class VehiclesCalculations():
         for source, data in ghg_database.vehicles.items():
             data = Vehicles.vehicle_from_dict(data)
             
-            total_emissions_type = total_emissions_type + \
-                Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
-                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-            emissions_type.append([data.vehicle_fuel, data.type, \
-                Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
-                    data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
+            if data.type == type:
+                total_emissions_type = total_emissions_type + \
+                    Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
+                        data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
+                emissions_type.append([data.vehicle_fuel, data.type, \
+                    Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
+                        data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
         
         return [total_emissions_type, emissions_type]
     
