@@ -374,6 +374,13 @@ def show_vehicles():
     print('Shipment Vehicles (units)')
     print(VehiclesCalculations.total_emissions_vehicles_type("SHIP")[0])
 
+def show_combustionmachinery():
+    print("Emissions Source: COMBUSTION MACHINERY")
+    print("- Fixed Combustion Machinery")
+    print(FixedCombustionCalculations.total_emissions_fixedcomb)
+    print("- Mobile Combustion Machinery")
+    print(MobileCombustionCalculations.total_emissions_mobilecomb)
+
 def show_materials():
     print('Emissions Source: MATERIALS')
     print('Matrials Used (Units)')
