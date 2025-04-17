@@ -12,9 +12,11 @@ class Energy:
     
     def total_GHG_emissions(phase, quantity, ef):
         if phase == "CONSTRUCTION":
-            return quantity * ef * ProjectPhasesService.project_duration()[0]
+            duration = float(ProjectPhasesService.project_duration()[0])
+            return quantity * ef * duration
         elif phase == "OPERATION":
-            return quantity * ef * ProjectPhasesService.project_duration()[1]
+            duration = float(ProjectPhasesService.project_duration()[1])
+            return quantity * ef * duration
             
     def to_dict(self):
         return {"phase": self.phase, "type": self.type, "source": self.source, "quantity": self.quantity, "ef": self.ef}

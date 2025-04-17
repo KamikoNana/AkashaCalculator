@@ -16,6 +16,7 @@ import app
 app.show_total()
 app.show_energy()
 app.show_vehicles()
+app.show_combustionmachinery()
 app.show_materials()
 app.show_soilusechange()
 app.show_wastetreatment()

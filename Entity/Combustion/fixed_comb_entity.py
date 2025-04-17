@@ -15,9 +15,11 @@ class FixedCombustion(CombustionEnginery):
         total_fuel = quantity * n
         
         if phase == "CONSTRUCTION":
-            return total_fuel * ef * ProjectPhasesService.project_duration()[0]
+            duration = float(ProjectPhasesService.project_duration()[0])
+            return total_fuel * ef * duration
         elif phase == "OPERATION":
-            return total_fuel * ef * ProjectPhasesService.project_duration()[1]
+            duration = float(ProjectPhasesService.project_duration()[1])
+            return total_fuel * ef * duration
         
     
     def to_dict(self):

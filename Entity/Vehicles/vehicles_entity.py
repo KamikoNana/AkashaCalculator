@@ -23,9 +23,11 @@ class Vehicles:
         total_emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
         
         if phase == "CONSTRUCTION":
-            return total_emissions * ProjectPhasesService.project_duration()[0]
+            duration = float(ProjectPhasesService.project_duration()[0])
+            return total_emissions * duration
         elif phase == "OPERATION":
-            return total_emissions * ProjectPhasesService.project_duration()[1]
+            duration = float(ProjectPhasesService.project_duration()[1])
+            return total_emissions * duration
     
     def to_dict(self):
         return {"phase": self.phase, "type": self.type, "vehicle_fuel": self.vehicle_fuel, "distance": self.km, \

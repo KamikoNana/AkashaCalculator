@@ -1,3 +1,5 @@
+import math
+
 import ghg_database
 
 from Entity.Energy.energy_entity import Energy
@@ -67,27 +69,30 @@ class EnergyCalculations():
     
     def total_emissions_peryear_energy():
         project_duration = ProjectPhasesService.project_duration()
+        construction_duration = math.ceil(project_duration[0])
+        operation_duration = math.ceil(project_duration[1])
+        full_duration = math.ceil(project_duration[2])
         
-        total_emissions_peryear_construction = [0] * project_duration[0]
-        total_emissions_peryear_operation = [0] * project_duration[1]
+        total_emissions_peryear_construction = [0] * construction_duration
+        total_emissions_peryear_operation = [0] * operation_duration
   
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
             if data.phase == "CONSTRUCTION":
                 emissions = data.quantity * data.ef
-                for i in range(project_duration[0]):
+                for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
             elif data.phase == "OPERATION":
                 emissions = data.quantity * data.ef
-                for i in range(project_duration[1]):
+                for i in range(operation_duration):
                     total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
             else:
                 pass
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         
-        for i in range(1, project_duration[2]):
+        for i in range(1, full_duration):
             total_emissions_peryear[i] = total_emissions_peryear[i] + total_emissions_peryear[i-1]
         
         return total_emissions_peryear

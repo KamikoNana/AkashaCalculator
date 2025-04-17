@@ -180,51 +180,59 @@ create_database()
  
 def plot_energy_peryear():
     years = list(range(1, len(EnergyCalculations.total_emissions_peryear_energy()) + 1))
+    emissions = EnergyCalculations.total_emissions_peryear_energy()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, EnergyCalculations.total_emissions_peryear_energy(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('Energy - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('Energy - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 def plot_fixedcomb_peryear():
     years = list(range(1, len(FixedCombustionCalculations.total_emissions_peryear_fixedcomb()) + 1))
+    emissions = FixedCombustionCalculations.total_emissions_peryear_fixedcomb()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, FixedCombustionCalculations.total_emissions_peryear_fixedcomb(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('Fixed Combustion - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('Fixed Combustion - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 def plot_mobilecomb_peryear():
     years = list(range(1, len(MobileCombustionCalculations.total_emissions_peryear_mobilecomb()) + 1))
+    emissions = MobileCombustionCalculations.total_emissions_peryear_mobilecomb()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, MobileCombustionCalculations.total_emissions_peryear_mobilecomb(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('Mobile Combustion - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('Mobile Combustion - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 def plot_materialsprod_peryear():
     years = list(range(1, len(MaterialsProductionCalculations.total_emissions_peryear_materialsprod()) + 1))
+    emissions = MaterialsProductionCalculations.total_emissions_peryear_materialsprod()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, MaterialsProductionCalculations.total_emissions_peryear_materialsprod(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('Materials Production - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('Materials Production - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 ## materials used do not have a plot because its measured in total quantities and not by time
 
@@ -232,111 +240,129 @@ def plot_materialsprod_peryear():
 
 def plot_vehicles_all_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_all()) + 1))
+    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_all()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, VehiclesCalculations.total_emissions_peryear_vehicles_all(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('All Vehicles - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('All Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_vehicles_road_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("ROAD")) + 1))
+    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("ROAD")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, VehiclesCalculations.total_emissions_peryear_vehicles_type("ROAD"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('ROAD Vehicles - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('ROAD Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_vehicles_train_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("TRAIN")) + 1))
+    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("TRAIN")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, VehiclesCalculations.total_emissions_peryear_vehicles_type("TRAIN"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('TRAIN Vehicles - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('TRAIN Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_vehicles_ship_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("SHIP")) + 1))
+    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("SHIP")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, VehiclesCalculations.total_emissions_peryear_vehicles_type("SHIP"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('SHIP Vehicles - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('SHIP Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_vehicles_air_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("AIR")) + 1))
+    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("AIR")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, VehiclesCalculations.total_emissions_peryear_vehicles_type("AIR"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('AIR Vehicles - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('AIR Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_waste_all_peryear():
     years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_all()) + 1))
+    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_all()
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, WasteTreatmentCalculations.total_emissions_peryear_waste_all(), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('All Waste Treatments - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('All Waste Treatments - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
     
 def plot_waste_solids_peryear():
     years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("WATER")) + 1))
+    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("WATER")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, WasteTreatmentCalculations.total_emissions_peryear_waste_type("WATER"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('WATER Treatment - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('WATER Treatment - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 def plot_waste_water_peryear():
     years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("SOLID")) + 1))
+    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("SOLID")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, WasteTreatmentCalculations.total_emissions_peryear_waste_type("SOLID"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('SOLIDS Treatment - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('SOLID Treatment - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 def plot_waste_gas_peryear():
     years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("GAS")) + 1))
+    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("GAS")
 
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, WasteTreatmentCalculations.total_emissions_peryear_waste_type("GAS"), marker='o', linestyle='-', color='g')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
-    plt.title('GAS stream Treatment - Cumulative Emissions Over Time')
-    plt.xlabel('Year')
-    plt.ylabel('Cumulative Emissions (tons of CO2e)')
-    plt.grid(True)
-    plt.show()
+    ax.set_title('GAS Treatment - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
 
 #above are defined the plots
 ##
@@ -351,55 +377,94 @@ def sum_all():
     return total
 
 def show_total():
-    print('Total Emissions (units)')
-    print(sum_all())
+    all = sum_all()
+    
+    show = (
+        "Total GHG Emissions: \n"
+        f"{all} CO2eq"
+    )
+    
+    return show
     
 def show_energy():
-    print('Emissions Source: ENERGY')
-    print('Energy Emissions (units)')
-    print(EnergyCalculations.total_emissions_energy()[0])
-    print('Energy Emissions Balance')
-    print(EnergyCalculations.GHG_emissions_saved_energy()[0])
+    all = EnergyCalculations.total_emissions_energy()[0]
+    balance = EnergyCalculations.GHG_emissions_saved_energy()[0]
+    
+    show = (
+        "ENERGY GHG Emissions \n"
+        f"Energy Emissions: {all} CO2eq \n"
+        f"Energy Emissions Balance: {balance} CO2eq \n"
+    )
+    
+    return show
+
     
 def show_vehicles():
-    print('Emissions Source: VEHICLES')
-    print('All Vehicles Emissions (unites)')
-    print(VehiclesCalculations.total_emissions_vehicles_all()[0])
-    print('Road Vehicles (units)')
-    print(VehiclesCalculations.total_emissions_vehicles_type("ROAD")[0])
-    print('Aircraft Vehicles (units)')
-    print(VehiclesCalculations.total_emissions_vehicles_type("AIR")[0])
-    print('Railway Vehicles (units)')
-    print(VehiclesCalculations.total_emissions_vehicles_type("TRAIN")[0])
-    print('Shipment Vehicles (units)')
-    print(VehiclesCalculations.total_emissions_vehicles_type("SHIP")[0])
+    all = VehiclesCalculations.total_emissions_vehicles_all()[0]
+    road = VehiclesCalculations.total_emissions_vehicles_type("ROAD")[0]
+    train = VehiclesCalculations.total_emissions_vehicles_type("AIR")[0]
+    ship = VehiclesCalculations.total_emissions_vehicles_type("TRAIN")[0]
+    air = VehiclesCalculations.total_emissions_vehicles_type("SHIP")[0]
+    
+    show = (
+        "VEHICLES GHG Emissions \n"
+        f"All Vehicles Emissions: {all} CO2eq \n"
+        f"- Road Vehicles Emissions: {road} CO2eq \n"
+        f"- Train Vehicles Emissions: {train} CO2eq \n"
+        f"- Ship Vehicles Emissions: {ship} CO2eq \n"
+        f"- Air Vehicles Emissions: {air} CO2eq \n"
+    )
+    
+    return show
 
 def show_combustionmachinery():
-    print("Emissions Source: COMBUSTION MACHINERY")
-    print("- Fixed Combustion Machinery")
-    print(FixedCombustionCalculations.total_emissions_fixedcomb)
-    print("- Mobile Combustion Machinery")
-    print(MobileCombustionCalculations.total_emissions_mobilecomb)
+    all = FixedCombustionCalculations.total_emissions_fixedcomb()[0] + MobileCombustionCalculations.total_emissions_mobilecomb()[0]
+    fixed = FixedCombustionCalculations.total_emissions_fixedcomb()[0]
+    mobile = MobileCombustionCalculations.total_emissions_mobilecomb()[0]
+    
+    show = (
+        "COMBUSTION MACHINERY GHG Emissions \n"
+        f"All Combustion Machinery Emissions: {all} CO2eq \n"
+        f"- Fixed Combustion Machinery Emissions: {fixed} CO2eq \n"
+        f"- Mobile Combustion Machinery Emissions: {mobile} CO2eq \n"
+    )
+    
+    return show
 
 def show_materials():
-    print('Emissions Source: MATERIALS')
-    print('Matrials Used (Units)')
-    print(MaterialsUseCalculations.total_emissions_materialsuse()[0])
-    print('Materials Produced (Units)')
-    print(MaterialsProductionCalculations.total_emissions_materialsprod()[0])
+    used = MaterialsUseCalculations.total_emissions_materialsuse()[0]
+    produced = MaterialsProductionCalculations.total_emissions_materialsprod()[0]
+    
+    show= (
+        "MATERIALS GHG Emissions \n"
+        f"Emissions for Materials Used: {used} CO2eq"
+        f"Emissions for Materials Production: {produced} CO2eq"
+    )
+
+    return show
 
 def show_soilusechange():
-    print('Emissions Source: SOIL USE CHANGE')
-    print('Soil Use Change Impact (Units)')
-    print(SoilUseChangeCalculations.total_emissions_soilusechange()[0])
+    all = SoilUseChangeCalculations.total_emissions_soilusechange()[0]
+    
+    show = (
+        "SOIL USE CHANGE GHG Emissions \n"
+        f"Soil Use Change Impact: {all} CO2eq \n"
+        "NOTE: If this value is negative, it represents that the soil use change was beneficial and the CO2 capture is higher than before he project implementation \n"
+    )
+    
+    return show
 
 def show_wastetreatment():
-    print('Emissions Source: WASTE TREATMENT')
-    print('All waste treatment (Units)')
-    print(WasteTreatmentCalculations.total_emissions_waste_all()[0])
-    print('Solid waste treatment (Units)')
-    print(WasteTreatmentCalculations.total_emissions_peryear_waste_type('SOLID')[0])
-    print('Wastewater treatment (Units)')
-    print(WasteTreatmentCalculations.total_emissions_waste_type('WATER')[0])
-    print('Gas stream treatment (Units)')
-    print(WasteTreatmentCalculations.total_emissions_waste_type('GAS')[0])
+    all = WasteTreatmentCalculations.total_emissions_waste_all()[0]
+    water = WasteTreatmentCalculations.total_emissions_waste_type('WATER')[0]
+    solid = WasteTreatmentCalculations.total_emissions_peryear_waste_type('SOLID')[0]
+    gas = WasteTreatmentCalculations.total_emissions_waste_type('GAS')[0]
+    
+    show = (
+        "All WASTE TREATMENT GHG Emissions \n"
+        f"- Wastewater Treatment Emissions: {water} CO2eq \n"
+        f"- Solid waste Treatment Emissions: {solid} CO2eq \n"
+        f"- Gas stream Treatment Emissions: {gas} CO2eq \n"
+    )
+    
+    return show

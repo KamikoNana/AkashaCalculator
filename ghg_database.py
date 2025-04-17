@@ -2,7 +2,7 @@
 
 ## Please ensure the data provided in the excel file is correct
 
-project_phases = {'CONSTRUCTION': {'phase': 'CONSTRUCTION', 'years': 15}, 'OPERATION': {'phase': 'OPERATION', 'years': 50}}
+project_phases = {'CONSTRUCTION': {'phase': 'CONSTRUCTION', 'years': 2.5}, 'OPERATION': {'phase': 'OPERATION', 'years': 50.0}}
 
 energy = {'network': {'phase': 'CONSTRUCTION', 'type': 'CONSUMED', 'source': 'network', 'quantity': 150, 'ef': 10}, 'hydropower': {'phase': 'OPERATION', 'type': 'PRODUCED', 'source': 'hydropower', 'quantity': 50, 'ef': 3}}
 

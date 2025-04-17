@@ -1,3 +1,5 @@
+import math
+
 import ghg_database
 
 from Entity.Vehicles.vehicles_entity import Vehicles
@@ -78,9 +80,12 @@ class VehiclesCalculations():
     
     def total_emissions_peryear_vehicles_all():
         project_duration = ProjectPhasesService.project_duration()
+        construction_duration = math.ceil(project_duration[0])
+        operation_duration = math.ceil(project_duration[1])
+        full_duration = math.ceil(project_duration[2])
         
-        total_emissions_peryear_construction = [0] * project_duration[0]
-        total_emissions_peryear_operation = [0] * project_duration[1]
+        total_emissions_peryear_construction = [0] * construction_duration
+        total_emissions_peryear_operation = [0] * operation_duration
         
         for source, data in ghg_database.vehicles.items():
             data = Vehicles.vehicle_from_dict(data)
@@ -92,7 +97,7 @@ class VehiclesCalculations():
                 N2O_totalemissions = total_fuel * data.n2o_emissions * data.n2o_cf
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
-                for i in range(project_duration[0]):
+                for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
             elif data.phase == "OPERATION":
@@ -102,23 +107,26 @@ class VehiclesCalculations():
                 N2O_totalemissions = total_fuel * data.n2o_emissions * data.n2o_cf
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
-                for i in range(project_duration[1]):
+                for i in range(operation_duration):
                     total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
             else:
                 pass
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         
-        for i in range(1, project_duration[2]):
+        for i in range(1, full_duration):
             total_emissions_peryear[i] = total_emissions_peryear[i] + total_emissions_peryear[i-1]
         
         return total_emissions_peryear
     
     def total_emissions_peryear_vehicles_type(type):
         project_duration = ProjectPhasesService.project_duration()
+        construction_duration = math.ceil(project_duration[0])
+        operation_duration = math.ceil(project_duration[1])
+        full_duration = math.ceil(project_duration[2])
         
-        total_emissions_peryear_construction = [0] * project_duration[0]
-        total_emissions_peryear_operation = [0] * project_duration[1]
+        total_emissions_peryear_construction = [0] * construction_duration
+        total_emissions_peryear_operation = [0] * operation_duration
         
         for source, data in ghg_database.vehicles.items():
             data = Vehicles.vehicle_from_dict(data)
@@ -132,7 +140,7 @@ class VehiclesCalculations():
                     N2O_totalemissions = total_fuel * data.n2o_emissions * data.n2o_cf
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                     
-                    for i in range(project_duration[0]):
+                    for i in range(construction_duration):
                         total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
                 elif data.phase == "OPERATION":
@@ -142,14 +150,14 @@ class VehiclesCalculations():
                     N2O_totalemissions = total_fuel * data.n2o_emissions * data.n2o_cf
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                     
-                    for i in range(project_duration[1]):
+                    for i in range(operation_duration):
                         total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
                 else:
                     pass
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         
-        for i in range(1, project_duration[2]):
+        for i in range(1, full_duration):
             total_emissions_peryear[i] = total_emissions_peryear[i] + total_emissions_peryear[i-1]
         
         return total_emissions_peryear
