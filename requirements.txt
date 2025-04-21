@@ -1,14 +1,11 @@
+## to install all packages insert in the console
+### pip install -r requirements.txt
+
 numpy
 pandas
 pandas
+math
 matplotlib
-seaborn
-flask
-memory_profiler
-streamlit
-scikit-learn
-#sklearn.datasets
-#sklear.ensemble
-
-## to install all packages insert in the console
-### pip install -r requirements.txt
+PySimpleGUI
+fpdf
+os

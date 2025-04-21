@@ -1,5 +1,6 @@
 import pandas
 import matplotlib.pyplot as plt
+from itertools import zip_longest
 
 from Entity.Combustion.fixed_comb_entity import FixedCombustion
 from Entity.Combustion.mobile_comb_entity import MobileCombustion
@@ -176,8 +177,52 @@ create_database()
 
  #up is all about the database transition
  ##
- #bellow about the plots and prepare data to be displayed
+
+#function to sum all emissions
+def sum_all_num():
+    energy = EnergyCalculations.total_emissions_energy()[0]
+    vehicles = VehiclesCalculations.total_emissions_vehicles_all()[0]
+    fixed_machinery = FixedCombustionCalculations.total_emissions_fixedcomb()[0]
+    mobile_machinery = MobileCombustionCalculations.total_emissions_mobilecomb()[0]
+    materials_production = MaterialsProductionCalculations.total_emissions_materialsprod()[0]
+    materials_use = MaterialsUseCalculations.total_emissions_materialsuse()[0]
+    soil = SoilUseChangeCalculations.total_emissions_soilusechange()[0]
+    waste = WasteTreatmentCalculations.total_emissions_waste_all()[0]
+    
+    total = energy + vehicles + fixed_machinery + mobile_machinery + materials_production + materials_use\
+        + soil + waste
+    
+    return total
+
+def sum_all_list():
+    energy = EnergyCalculations.total_emissions_peryear_energy()
+    vehicles = VehiclesCalculations.total_emissions_peryear_vehicles_all()
+    fixed_machinery = FixedCombustionCalculations.total_emissions_peryear_fixedcomb()
+    mobile_machinery = MobileCombustionCalculations.total_emissions_peryear_mobilecomb()
+    materials_production = MaterialsProductionCalculations.total_emissions_peryear_materialsprod()
+    waste = WasteTreatmentCalculations.total_emissions_peryear_waste_all()
+    
+    total = [sum(values) for values in zip_longest(
+            energy, vehicles, fixed_machinery, mobile_machinery, materials_production, waste, fillvalue=0)]
+    
+    return total
+
+#bellow about the plots and prepare data to be displayed   
  
+def plot_total_peryear():
+    years = list(range(1, len(sum_all_list()) + 1))
+    emissions = sum_all_list()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('Total Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.grid(True)
+    
+    return fig
+    
 def plot_energy_peryear():
     years = list(range(1, len(EnergyCalculations.total_emissions_peryear_energy()) + 1))
     emissions = EnergyCalculations.total_emissions_peryear_energy()
@@ -368,16 +413,8 @@ def plot_waste_gas_peryear():
 ##
 #bellow is presented the number data
 
-def sum_all():
-    energy = EnergyCalculations.total_emissions_energy()[0]
-    vehicles = VehiclesCalculations.total_emissions_vehicles_all()[0]
-    
-    total = energy + vehicles
-    
-    return total
-
 def show_total():
-    all = sum_all()
+    all = sum_all_num()
     
     show = (
         "Total GHG Emissions: \n"

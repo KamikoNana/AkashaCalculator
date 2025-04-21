@@ -1,3 +1,5 @@
+import app
+
 import PySimpleGUI as sg
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -5,9 +7,7 @@ from matplotlib.figure import Figure
 from fpdf import FPDF
 import os
 
-import app  # Your custom emissions and plot functions
-
-# Categories
+#List with all emissions sources considered
 categories = ["All", "Energy", "Combustion Machinery", "Vehicles", "Materials", "Soil Use Change", "Waste Treatment"]
 
 # PDF Export Function
@@ -15,17 +15,111 @@ def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_repor
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", 'B', 14)
+
+    # Title
+    pdf.set_font("Arial", 'B', 16)
     pdf.cell(0, 10, title, ln=True)
+    pdf.ln(10)
+
+    # Section: Total
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Total Emissions Summary", ln=True)
     pdf.set_font("Arial", '', 12)
-    pdf.multi_cell(0, 10, summary)
-    for i, fig in enumerate(figure_list):
-        image_name = f"temp_plot_{i}.png"
-        fig.savefig(image_name)
-        pdf.image(image_name, x=10, w=180)
-        os.remove(image_name)
+    pdf.multi_cell(0, 10, str(app.show_total() or ""))
+    pdf.ln(5)
+    total_fig = app.plot_total_peryear()
+    img_path = "temp_total_plot.png"
+    total_fig.savefig(img_path)
+    pdf.image(img_path, x=10, w=180)
+    os.remove(img_path)
+
+    # Section: Energy
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Energy Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_energy() or ""))
+    energy_fig = app.plot_energy_peryear()
+    img_path = "temp_energy_plot.png"
+    energy_fig.savefig(img_path)
+    pdf.image(img_path, x=10, w=180)
+    os.remove(img_path)
+
+    # Section: Combustion Machinery
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Combustion Machinery Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_combustionmachinery() or ""))
+    for plot_func in [app.plot_fixedcomb_peryear, app.plot_mobilecomb_peryear]:
+        fig = plot_func()
+        img_path = f"temp_comb_plot_{plot_func.__name__}.png"
+        fig.savefig(img_path)
+        pdf.image(img_path, x=10, w=180)
+        os.remove(img_path)
+
+    # Section: Vehicles
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Vehicles Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_vehicles() or ""))
+    for plot_func in [
+        app.plot_vehicles_all_peryear,
+        app.plot_vehicles_road_peryear,
+        app.plot_vehicles_train_peryear,
+        app.plot_vehicles_ship_peryear,
+        app.plot_vehicles_air_peryear
+    ]:
+        fig = plot_func()
+        img_path = f"temp_veh_plot_{plot_func.__name__}.png"
+        fig.savefig(img_path)
+        pdf.image(img_path, x=10, w=180)
+        os.remove(img_path)
+
+    # Section: Materials
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Materials Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_materials() or ""))
+    fig = app.plot_materialsprod_peryear()
+    img_path = "temp_mat_plot.png"
+    fig.savefig(img_path)
+    pdf.image(img_path, x=10, w=180)
+    os.remove(img_path)
+
+    # Section: Soil Use Change
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Soil Use Change Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_soilusechange() or ""))
+
+    # Section: Waste Treatment
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Waste Treatment Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_wastetreatment() or ""))
+    for plot_func in [
+        app.plot_waste_all_peryear,
+        app.plot_waste_solids_peryear,
+        app.plot_waste_water_peryear,
+        app.plot_waste_gas_peryear
+    ]:
+        fig = plot_func()
+        img_path = f"temp_waste_plot_{plot_func.__name__}.png"
+        fig.savefig(img_path)
+        pdf.image(img_path, x=10, w=180)
+        os.remove(img_path)
+
+    # Save PDF
     pdf.output(filename)
-    sg.popup("PDF exported successfully!", filename)
+    sg.popup(
+        "PDF exported successfully!", 
+        filename, 
+        "PDF saved in the same location as AkashaCalc.exe")
 
 # Plot Drawing
 def draw_figure(canvas, figure):
@@ -103,6 +197,7 @@ while True:
                 summary_text += str(app.show_wastetreatment() or "") + "\n"
 
                 figures = [
+                    app.plot_total_peryear(),
                     app.plot_energy_peryear(),
                     app.plot_vehicles_all_peryear(),
                     app.plot_fixedcomb_peryear(),
