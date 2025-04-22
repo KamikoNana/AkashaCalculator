@@ -1,5 +1,9 @@
-## Vehicles
-# (vehicle, fuel, km/year, number of vehicles of that type, CO2emissons, CH4emissions, N2Oemissions)
+"""
+This file contains the Entity for the Vehicles emissions source. 
+- Defines the Entity Class and includes the calculation of the emissons for 1 element;
+All variables are described in the AkachaCalc Guidebook avaliable in the GitHub repository
+"""
+
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
 
 class Vehicles:

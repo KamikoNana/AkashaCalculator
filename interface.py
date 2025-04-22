@@ -9,9 +9,11 @@ import os
 
 #List with all emissions sources considered
 categories = ["All", "Energy", "Combustion Machinery", "Vehicles", "Materials", "Soil Use Change", "Waste Treatment"]
-
+ 
 # PDF Export Function
 def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_report.pdf"):
+    
+    
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()

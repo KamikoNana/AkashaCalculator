@@ -1,6 +1,10 @@
-#Energy
-from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+"""
+This file contains the Entity for the Energy emissions source. 
+- Defines the Entity Class and includes the calculation of the emissons for 1 element;
+All variables are described in the AkachaCalc Guidebook avaliable in the GitHub repository
+"""
 
+from Services.ProjectPhases.project_phases_service import ProjectPhasesService
 
 class Energy:
     def __init__(self, phase, type, source, quantity, ef):

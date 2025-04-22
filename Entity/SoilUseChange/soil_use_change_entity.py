@@ -1,5 +1,8 @@
-## Soild use change
-# (area, previous_soiluse, prev_seqfactor, new_soilduse, new_seqfactor)
+"""
+This file contains the Entity for the Soil Use Change emissions source. 
+- Defines the Entity Class and includes the calculation of the emissons for 1 element;
+All variables are described in the AkachaCalc Guidebook avaliable in the GitHub repository
+"""
 
 class SoilUseChange:
     def __init__(self, change, area, previous_soiluse, prev_seqfactor, new_soiluse, new_seqfactor):

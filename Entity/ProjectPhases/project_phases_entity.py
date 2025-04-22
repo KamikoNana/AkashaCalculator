@@ -1,6 +1,8 @@
-## Project phases
-# (phase, years)
-
+"""
+This file contains the Entity for the Project Phases definition. 
+- Defines the Entity Class;
+All variables are described in the AkachaCalc Guidebook avaliable in the GitHub repository
+"""
 
 class ProjectPhases:
     def __init__(self, phase, years):

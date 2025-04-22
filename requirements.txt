@@ -1,11 +1,13 @@
 ## to install all packages insert in the console
 ### pip install -r requirements.txt
 
+--extra-index-url https://PySimpleGUI.net/install
+PySimpleGUI
 numpy
 pandas
-pandas
-math
 matplotlib
-PySimpleGUI
 fpdf
-os
+openpyxl
+
+#if there is an error encountering the PySimpleGUI please install this library again using the follwing line in the termina
+## python -m pip install --upgrade --extra-index-url https://PySimpleGUI.net/install PySimpleGUI
