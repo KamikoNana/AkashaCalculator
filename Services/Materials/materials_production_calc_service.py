@@ -4,6 +4,7 @@ import ghg_database
 
 from Entity.Materials.materials_production_entity import MaterialsProduction
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
 
 class MaterialsProductionCalculations():
     def __init__(self):
@@ -29,10 +30,10 @@ class MaterialsProductionCalculations():
         for source, data in ghg_database.materials_prod.items():
             data = MaterialsProduction.materialprod_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_materialsprod = construction_emissions_materialsprod +\
                     MaterialsProduction.total_GHG_emissions(data.phase, data.quantity, data.ef)
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_materialsprod = operation_emissions_materialsprod +\
                     MaterialsProduction.total_GHG_emissions(data.phase, data.quantity, data.ef)
             else:
@@ -53,11 +54,11 @@ class MaterialsProductionCalculations():
         for source, data in ghg_database.materials_prod.items():
             data = MaterialsProduction.materialprod_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 emissions = data.quantity * data.ef
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 emissions = data.quantity * data.ef
                 for i in range(operation_duration):
                     total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions

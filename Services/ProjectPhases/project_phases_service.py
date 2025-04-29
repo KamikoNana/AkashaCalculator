@@ -1,16 +1,17 @@
 import ghg_database
+from Entity.ProjectPhases.project_phases_entity import Phase
 
 class ProjectPhasesService():
     def __init__(self):
-        self
+        self 
     
     def project_duration():
         construction = 0
         operation = 0
         for source, data in ghg_database.project_phases.items():
-            if source == "CONSTRUCTION":
+            if Phase[source] == Phase.CONSTRUCTION:
                 construction = data["years"]
-            if source == "OPERATION":
+            if Phase[source] == Phase.OPERATION:
                 operation = data["years"]
         
         return [construction, operation, construction + operation]

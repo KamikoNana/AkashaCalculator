@@ -12,8 +12,6 @@ categories = ["All", "Energy", "Combustion Machinery", "Vehicles", "Materials", 
 
 # PDF Export Function
 def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_report.pdf"):
-    
-    
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
@@ -46,7 +44,20 @@ def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_repor
     energy_fig.savefig(img_path)
     pdf.image(img_path, x=10, w=180)
     os.remove(img_path)
-    
+
+    # Section: Combustion Machinery
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "Combustion Machinery Emissions", ln=True)
+    pdf.set_font("Arial", '', 12)
+    pdf.multi_cell(0, 10, str(app.show_combustionmachinery() or ""))
+    for plot_func in [app.plot_fixedcomb_peryear, app.plot_mobilecomb_peryear]:
+        fig = plot_func()
+        img_path = f"temp_comb_plot_{plot_func.__name__}.png"
+        fig.savefig(img_path)
+        pdf.image(img_path, x=10, w=180)
+        os.remove(img_path)
+
     # Section: Vehicles
     pdf.add_page()
     pdf.set_font("Arial", 'B', 14)
@@ -62,19 +73,6 @@ def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_repor
     ]:
         fig = plot_func()
         img_path = f"temp_veh_plot_{plot_func.__name__}.png"
-        fig.savefig(img_path)
-        pdf.image(img_path, x=10, w=180)
-        os.remove(img_path)
-
-    # Section: Combustion Machinery
-    pdf.add_page()
-    pdf.set_font("Arial", 'B', 14)
-    pdf.cell(0, 10, "Combustion Machinery Emissions", ln=True)
-    pdf.set_font("Arial", '', 12)
-    pdf.multi_cell(0, 10, str(app.show_combustionmachinery() or ""))
-    for plot_func in [app.plot_fixedcomb_peryear, app.plot_mobilecomb_peryear]:
-        fig = plot_func()
-        img_path = f"temp_comb_plot_{plot_func.__name__}.png"
         fig.savefig(img_path)
         pdf.image(img_path, x=10, w=180)
         os.remove(img_path)

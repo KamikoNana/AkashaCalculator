@@ -4,6 +4,8 @@ import ghg_database
 
 from Entity.WasteTreatm.waste_treatm_entity import WasteTreatment
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
+from Entity.WasteTreatm.waste_treatm_entity import WasteType
 
 class WasteTreatmentCalculations():
     def __init__(self):
@@ -47,11 +49,11 @@ class WasteTreatmentCalculations():
         for source, data in ghg_database.waste_treatm.items():
             data = WasteTreatment.waste_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_waste = construction_emissions_waste +\
                     WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_waste = operation_emissions_waste + \
                     WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
@@ -68,11 +70,11 @@ class WasteTreatmentCalculations():
             
             if data.type == type:
                 
-                if data.phase == "CONSTRUCTION":
+                if data.phase == Phase.CONSTRUCTION:
                     construction_emissions_waste = construction_emissions_waste +\
                     WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-                elif data.phase == "OPERATION":
+                elif data.phase == Phase.OPERATION:
                     operation_emissions_waste = operation_emissions_waste + \
                     WasteTreatment.total_GHG_emissions(data.phase, data.quantity, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
@@ -93,7 +95,7 @@ class WasteTreatmentCalculations():
         for source, data in ghg_database.waste_treatm.items():
             data = WasteTreatment.waste_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 CO2_totalemissions = data.quantity * data.co2_emissions 
                 CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
                 N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
@@ -102,8 +104,7 @@ class WasteTreatmentCalculations():
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
-            elif data.phase == "OPERATION":
-                
+            elif Phase[data.phase] == Phase.OPERATION:
                 CO2_totalemissions = data.quantity * data.co2_emissions 
                 CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
                 N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
@@ -136,7 +137,7 @@ class WasteTreatmentCalculations():
             
             if data.stream == type:
                 
-                if data.phase == "CONSTRUCTION":
+                if Phase[data.phase] == Phase.CONSTRUCTION:
                     CO2_totalemissions = data.quantity * data.co2_emissions 
                     CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
                     N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf
@@ -145,8 +146,7 @@ class WasteTreatmentCalculations():
                     for i in range(construction_duration):
                         total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
-                elif data.phase == "OPERATION":
-                    
+                elif Phase[data.phase] == Phase.OPERATION:
                     CO2_totalemissions = data.quantity * data.co2_emissions 
                     CH4_totalemissions = data.quantity * data.ch4_emissions * data.ch4_cf
                     N2O_totalemissions = data.quantity * data.n2o_emissions * data.n2o_cf

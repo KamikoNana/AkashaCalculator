@@ -4,6 +4,8 @@ import ghg_database
 
 from Entity.Vehicles.vehicles_entity import Vehicles
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
+from Entity.Vehicles.vehicles_entity import VehiclesType
 
 class VehiclesCalculations():
     def __init__(self):
@@ -18,7 +20,7 @@ class VehiclesCalculations():
             total_emissions_vehicles = total_emissions_vehicles + \
                 Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-            emissions_vehicles.append([data.vehicle_fuel, data.type, \
+            emissions_vehicles.append([data.vehicle, data.type, \
                 Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
         
@@ -34,7 +36,7 @@ class VehiclesCalculations():
                 total_emissions_type = total_emissions_type + \
                     Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                         data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-                emissions_type.append([data.vehicle_fuel, data.type, \
+                emissions_type.append([data.vehicle, data.type, \
                     Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                         data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)])
         
@@ -46,11 +48,11 @@ class VehiclesCalculations():
         for source, data in ghg_database.vehicles.items():
             data = Vehicles.vehicle_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_vehicles = construction_emissions_vehicles + \
                     Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_vehicles = operation_emissions_vehicles + \
                     Vehicles.total_GHG_emissions(data.phase, data.type, data.name, data.km, data.n, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
@@ -65,11 +67,11 @@ class VehiclesCalculations():
             data = Vehicles.vehicle_from_dict(data)
             
             if data.type == type:
-                if data.phase == "CONSTRUCTION":
+                if Phase[data.phase] == Phase.CONSTRUCTION:
                     construction_emissions_vehicles = construction_emissions_vehicles + \
                     Vehicles.total_GHG_emissions(data.phase, data.km, data.n, \
                     data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-                elif data.phase == "OPERATION":
+                elif Phase[data.phase] == Phase.OPERATION:
                     operation_emissions_vehicles = operation_emissions_vehicles + \
                         Vehicles.total_GHG_emissions(data.phase, data.type, data.name, data.km, data.n, \
                         data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
@@ -90,7 +92,7 @@ class VehiclesCalculations():
         for source, data in ghg_database.vehicles.items():
             data = Vehicles.vehicle_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 total_fuel = data.km * data.n
                 CO2_totalemissions = total_fuel * data.co2_emissions 
                 CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf
@@ -100,7 +102,7 @@ class VehiclesCalculations():
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 total_fuel = data.km * data.n
                 CO2_totalemissions = total_fuel * data.co2_emissions 
                 CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf
@@ -133,7 +135,7 @@ class VehiclesCalculations():
             
             if data.type == type:
                 
-                if data.phase == "CONSTRUCTION":
+                if Phase[data.phase] == Phase.CONSTRUCTION:
                     total_fuel = data.km * data.n
                     CO2_totalemissions = total_fuel * data.co2_emissions 
                     CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf
@@ -143,7 +145,7 @@ class VehiclesCalculations():
                     for i in range(construction_duration):
                         total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
-                elif data.phase == "OPERATION":
+                elif Phase[data.phase] == Phase.OPERATION:
                     total_fuel = data.km * data.n
                     CO2_totalemissions = total_fuel * data.co2_emissions 
                     CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf

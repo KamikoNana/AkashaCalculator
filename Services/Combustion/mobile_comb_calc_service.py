@@ -4,6 +4,7 @@ import ghg_database
 
 from Entity.Combustion.mobile_comb_entity import MobileCombustion
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
 
 class MobileCombustionCalculations():
     def __init__(self):
@@ -30,11 +31,11 @@ class MobileCombustionCalculations():
         for source, data in ghg_database.mobile_combustion.items():
             data = MobileCombustion.mobilecomb_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_mobilecomb = construction_emissions_mobilecomb + \
                     MobileCombustion.total_GHG_emissions(data.phase, data.quantity,\
                     data.n, data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_mobilecomb = operation_emissions_mobilecomb + \
                     MobileCombustion.total_GHG_emissions(data.phase, data.quantity,\
                     data.n, data.co2_emissions, data.ch4_emissions, data.ch4_cf, data.n2o_emissions, data.n2o_cf)
@@ -57,7 +58,7 @@ class MobileCombustionCalculations():
         for source, data in ghg_database.mobile_combustion.items():
             data = MobileCombustion.mobilecomb_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 total_fuel = data.quantity * data.n
                 CO2_totalemissions = total_fuel * data.co2_emissions 
                 CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf
@@ -65,7 +66,7 @@ class MobileCombustionCalculations():
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 total_fuel = data.quantity * data.n
                 CO2_totalemissions = total_fuel * data.co2_emissions 
                 CH4_totalemissions = total_fuel * data.ch4_emissions * data.ch4_cf

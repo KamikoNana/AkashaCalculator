@@ -2,6 +2,7 @@ import ghg_database
 
 from Entity.Materials.materials_use_entity import MaterialsUse
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
 
 class MaterialsUseCalculations():
     def __init__(self):
@@ -27,11 +28,11 @@ class MaterialsUseCalculations():
         for source, data in ghg_database.materials_use.items():
             data = MaterialsUse.materialsuse_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_materialsuse = construction_emissions_materialsuse + \
                     MaterialsUse.total_GHG_emissions(data.phase, data.material, data.quantity, data.ef)
                     
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_materialsuse = operation_emissions_materialsuse + \
                     MaterialsUse.total_GHG_emissions(data.phase, data.material, data.quantity, data.ef)
             else:

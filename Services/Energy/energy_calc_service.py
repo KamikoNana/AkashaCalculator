@@ -4,6 +4,8 @@ import ghg_database
 
 from Entity.Energy.energy_entity import Energy
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
+from Entity.Energy.energy_entity import EnergyType
 
 class EnergyCalculations():
     def __init__(self):
@@ -29,11 +31,11 @@ class EnergyCalculations():
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_energy = construction_emissions_energy + \
                     Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
             
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_energy = operation_emissions_energy + \
                     Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
             else:
@@ -50,7 +52,7 @@ class EnergyCalculations():
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
-            if data.type == "CONSUMED":
+            if EnergyType[data.type] == EnergyType.CONSUMED:
                 total_consumed = total_consumed + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
                 n_consumed = n_consumed + 1
             consumed = total_consumed/n_consumed
@@ -58,7 +60,7 @@ class EnergyCalculations():
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
-            if data.type == "PRODUCED":
+            if EnergyType[data.type] == EnergyType.PRODUCED:
                 energy = Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
                 total_balance = total_balance + (consumed-energy)
                 balance.append([data.source, consumed-energy])
@@ -79,11 +81,11 @@ class EnergyCalculations():
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 emissions = data.quantity * data.ef
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 emissions = data.quantity * data.ef
                 for i in range(operation_duration):
                     total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions

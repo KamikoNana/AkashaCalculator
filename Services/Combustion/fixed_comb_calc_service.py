@@ -4,6 +4,7 @@ import ghg_database
 
 from Entity.Combustion.fixed_comb_entity import FixedCombustion
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
+from Entity.ProjectPhases.project_phases_entity import Phase
 
 class FixedCombustionCalculations():
     def __init__(self):
@@ -28,10 +29,10 @@ class FixedCombustionCalculations():
         for source, data in ghg_database.fixed_combustion.items():
             data = FixedCombustion.fixedcomb_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 construction_emissions_fixedcomb = construction_emissions_fixedcomb + \
                     FixedCombustion.total_GHG_emissions(data.phase, data.quantity, data.n, data.ef)
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 operation_emissions_fixedcomb = operation_emissions_fixedcomb + \
                     FixedCombustion.total_GHG_emissions(data.phase, data.quantity, data.n, data.ef)
             else:
@@ -51,11 +52,11 @@ class FixedCombustionCalculations():
         for source, data in ghg_database.fixed_combustion.items():
             data = FixedCombustion.fixedcomb_from_dict(data)
             
-            if data.phase == "CONSTRUCTION":
+            if Phase[data.phase] == Phase.CONSTRUCTION:
                 emissions = data.quantity * data.ef
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
-            elif data.phase == "OPERATION":
+            elif Phase[data.phase] == Phase.OPERATION:
                 emissions = data.quantity * data.ef
                 for i in range(operation_duration):
                     total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions

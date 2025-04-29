@@ -4,12 +4,12 @@ from itertools import zip_longest
 
 from Entity.Combustion.fixed_comb_entity import FixedCombustion
 from Entity.Combustion.mobile_comb_entity import MobileCombustion
-from Entity.Energy.energy_entity import Energy
+from Entity.Energy.energy_entity import Energy, EnergyType
 from Entity.Materials.materials_production_entity import MaterialsProduction
 from Entity.Materials.materials_use_entity import MaterialsUse
-from Entity.ProjectPhases.project_phases_entity import ProjectPhases
+from Entity.ProjectPhases.project_phases_entity import ProjectPhases, Phase
 from Entity.SoilUseChange.soil_use_change_entity import SoilUseChange
-from Entity.Vehicles.vehicles_entity import Vehicles
+from Entity.Vehicles.vehicles_entity import Vehicles, VehiclesType
 from Entity.WasteTreatm.waste_treatm_entity import WasteTreatment
 
 from Services.ProjectPhases.project_phases_service import ProjectPhasesService
@@ -32,7 +32,7 @@ materials_use = {}
 soil_use_change = {}
 waste_treatm = {}
 
-file_path = "database.xlsx"
+file_path = "database_akasha.xlsx"
 xls = pandas.ExcelFile(file_path)
 
 def create_objects(xls):
@@ -49,7 +49,7 @@ def create_objects(xls):
         
         phase = row['project_phase']
         type = row['type']
-        source = row['name']
+        source = row['source']
         quantity = row['quantity']
         ef = row['emission_factor']
         
@@ -60,7 +60,7 @@ def create_objects(xls):
     for index, row in sheet_data.iloc[1:].iterrows():
         phase = row['project_phase']
         type = row['type']
-        name = row['name']
+        vehicle = row['vehicle_fueltype']
         km = row['distance']
         n = row['n_vehicles']
         co2_emissions = row['co2_emissions']
@@ -69,14 +69,14 @@ def create_objects(xls):
         n2o_emissions = row['n2o_emissions']
         n2o_cf = row['n2o_corrfactor']
         
-        object = Vehicles(phase, type, name, km, n, co2_emissions, \
+        object = Vehicles(phase, type, vehicle, km, n, co2_emissions, \
             ch4_emissions, ch4_cf, n2o_emissions, n2o_cf)
-        vehicles[name] = object.to_dict()
+        vehicles[vehicle] = object.to_dict()
         
     sheet_data = pandas.read_excel(file_path, sheet_name="FIXED_COMBUSTION")
     for index, row in sheet_data.iloc[1:].iterrows():
         phase = row['project_phase']
-        enginery_fueltype = row['name']
+        enginery_fueltype = row['enginery_fueltype']
         quantity = row['quantity']
         n = row['n_machines']
         ef = row['emission_factor']
@@ -87,7 +87,7 @@ def create_objects(xls):
     sheet_data = pandas.read_excel(file_path, sheet_name="MOBILE_COMBUSTION")
     for index, row in sheet_data.iloc[1:].iterrows():
         phase = row['project_phase']
-        enginery_fueltype = row['name']
+        enginery_fueltype = row['enginery_fueltype']
         quantity = row['quantity']
         n = row['n_machines']
         co2_emissions = row['co2_emissions']
@@ -114,7 +114,7 @@ def create_objects(xls):
     sheet_data = pandas.read_excel(file_path, sheet_name="MATERIALS_USE")
     for index, row in sheet_data.iloc[1:].iterrows():
         phase = row['project_phase']
-        material = row['name']
+        material = row['material']
         quantity = row['quantity']
         ef = row['emission_factor']
         
@@ -123,7 +123,7 @@ def create_objects(xls):
 
     sheet_data = pandas.read_excel(file_path, sheet_name="SOIL_USE_CHANGE")
     for index, row in sheet_data.iloc[1:].iterrows(): 
-        change = row['name']
+        change = row['change']
         area = row['area']
         previous_soiluse = row['prev_soil_use']
         new_soiluse = row['new_soil_use']
@@ -132,12 +132,12 @@ def create_objects(xls):
         
         object = SoilUseChange(change, area, previous_soiluse, prev_seqfactor, \
                     new_soiluse, new_seqfactor)
-        soil_use_change[name] = object.to_dict()
+        soil_use_change[change] = object.to_dict()
         
     sheet_data = pandas.read_excel(file_path, sheet_name="WASTE_TREATMENT")
     for index, row in sheet_data.iloc[1:].iterrows():
         phase = row['project_phase']
-        treatment = row['name']
+        treatment = row['treatment']
         stream = row['stream']
         quantity = row['quantity']
         co2_emissions = row['co2_emissions']
@@ -474,8 +474,8 @@ def show_materials():
     
     show= (
         "MATERIALS GHG Emissions \n"
-        f"Emissions for Materials Used: {used} CO2eq"
-        f"Emissions for Materials Production: {produced} CO2eq"
+        f"- Emissions for Materials Used: {used} CO2eq \n"
+        f"- Emissions for Materials Production: {produced} CO2eq \n"
     )
 
     return show
@@ -486,7 +486,7 @@ def show_soilusechange():
     show = (
         "SOIL USE CHANGE GHG Emissions \n"
         f"Soil Use Change Impact: {all} CO2eq \n"
-        "NOTE: If this value is negative, it represents that the soil use change was beneficial and the CO2 capture is higher than before he project implementation \n"
+        "NOTE: If this value is negative, it represents that the soil use change was beneficial and the CO2 capture is higher than before the project implementation \n"
     )
     
     return show
@@ -499,6 +499,7 @@ def show_wastetreatment():
     
     show = (
         "All WASTE TREATMENT GHG Emissions \n"
+        f"All Waste Treatment Emissions: {all} CO2eq \n"
         f"- Wastewater Treatment Emissions: {water} CO2eq \n"
         f"- Solid waste Treatment Emissions: {solid} CO2eq \n"
         f"- Gas stream Treatment Emissions: {gas} CO2eq \n"
