@@ -1,3 +1,9 @@
+"""
+This file contains the Service for the Materials Use emissions source. 
+- Includes all calculations for the Materials Use class elements
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import ghg_database
 
 from Entity.Materials.materials_use_entity import MaterialsUse
@@ -9,6 +15,9 @@ class MaterialsUseCalculations():
         self
         
     def total_emissions_materialsuse():
+        """
+        Calculates the total sum of GHG emissions for this emissions source
+        """
         total_emissions_materialsuse = 0
         emissions_materialsuse =[]
         for source, data in ghg_database.materials_use.items():
@@ -23,6 +32,9 @@ class MaterialsUseCalculations():
         return [total_emissions_materialsuse, emissions_materialsuse]
     
     def phase_emissions_materialsuse():
+        """
+        Calculates the total sum of GHG emissions for this emissions source for each project phase considered
+        """
         construction_emissions_materialsuse = 0
         operation_emissions_materialsuse = 0
         for source, data in ghg_database.materials_use.items():

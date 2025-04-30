@@ -1,3 +1,9 @@
+"""
+This file contains the Service for the Energy emissions source. 
+- Includes all calculations for the Energy class elements
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import math
 
 import ghg_database
@@ -12,6 +18,9 @@ class EnergyCalculations():
         self
     
     def total_emissions_energy():
+        """
+        Calculates the total sum of GHG emissions for this emissions source
+        """
         total_emissions_energy = 0
         emissions_energy =[]
         for source, data in ghg_database.energy.items():
@@ -26,6 +35,9 @@ class EnergyCalculations():
         return [total_emissions_energy, emissions_energy]
             
     def phase_emissions_energy():
+        """
+        Calculates the total sum of GHG emissions for this emissions source for each project phase considered
+        """
         construction_emissions_energy = 0
         operation_emissions_energy = 0
         for source, data in ghg_database.energy.items():
@@ -44,9 +56,17 @@ class EnergyCalculations():
         return [construction_emissions_energy, operation_emissions_energy]
     
     def GHG_emissions_saved_energy():
+        """
+        Calculates the total balance of GHG emissions between the energy consumed and energy produced
+        - Calculated the total balance (total consumed - total produced)
+            - If this value is NEGATIVE indicates that the energy produced colmates the energy consumed emissions for the project
+        - Provides outputs on the estimate optimization for each produced energy
+        """
         energy = 0
         total_consumed = 0
+        mean_consumed = 0
         n_consumed = 0
+        total_produced = 0
         total_balance = 0
         balance = []
         for source, data in ghg_database.energy.items():
@@ -55,21 +75,32 @@ class EnergyCalculations():
             if EnergyType[data.type] == EnergyType.CONSUMED:
                 total_consumed = total_consumed + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
                 n_consumed = n_consumed + 1
-            consumed = total_consumed/n_consumed
+                mean_consumed = total_consumed / n_consumed
+                
+            if EnergyType[data.type] == EnergyType.PRODUCED:
+                total_produced = total_produced + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
+                
+            else:
+                pass
+            
+            total_balance = total_consumed - total_produced
         
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
             if EnergyType[data.type] == EnergyType.PRODUCED:
                 energy = Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
-                total_balance = total_balance + (consumed-energy)
-                balance.append([data.source, consumed-energy])
+                balance.append([data.source, mean_consumed - energy])
+                
             else:
                 pass
     
         return [total_balance, balance]
     
     def total_emissions_peryear_energy():
+        """
+        Calculates the total commulative sum of GHG emissions for this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])

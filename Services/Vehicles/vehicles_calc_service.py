@@ -1,3 +1,9 @@
+"""
+This file contains the Service for the Vehicles emissions source. 
+- Includes all calculations for the Vahicles class elements
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import math
 
 import ghg_database
@@ -12,6 +18,9 @@ class VehiclesCalculations():
         self
         
     def total_emissions_vehicles_all():
+        """
+        Calculates the total sum GHG emissions for ALL VEHICLES of this emissions source
+        """
         total_emissions_vehicles = 0
         emissions_vehicles =[]
         for source, data in ghg_database.vehicles.items():
@@ -27,6 +36,9 @@ class VehiclesCalculations():
         return [total_emissions_vehicles, emissions_vehicles]
     
     def total_emissions_vehicles_type(type):
+        """
+        Calculates the total sum of GHG emissions for EACH TYPE of this emissions source
+        """
         total_emissions_type = 0
         emissions_type =[]
         for source, data in ghg_database.vehicles.items():
@@ -43,6 +55,9 @@ class VehiclesCalculations():
         return [total_emissions_type, emissions_type]
     
     def phase_emissions_vehicles_all():
+        """
+        Calculates the total sum of GHG emissions for ALL VEHICLES of this emissions source for each project phase considered
+        """
         construction_emissions_vehicles = 0
         operation_emissions_vehicles = 0
         for source, data in ghg_database.vehicles.items():
@@ -61,6 +76,9 @@ class VehiclesCalculations():
         return [construction_emissions_vehicles, operation_emissions_vehicles]
     
     def phase_emissions_vehicles_type(type):
+        """
+        Calculates the total sum of GHG emissions for EACH TYPE of this emissions source for each project phase considered
+        """
         construction_emissions_vehicles = 0
         operation_emissions_vehicles = 0
         for source, data in ghg_database.vehicles.items():
@@ -81,6 +99,9 @@ class VehiclesCalculations():
             return [construction_emissions_vehicles, operation_emissions_vehicles]
     
     def total_emissions_peryear_vehicles_all():
+        """
+        Calculates the total commulative sum of GHG emissions for ALL VEHICLES of this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])
@@ -122,6 +143,9 @@ class VehiclesCalculations():
         return total_emissions_peryear
     
     def total_emissions_peryear_vehicles_type(type):
+        """
+        Calculates the total commulative sum of GHG emissions for EACH TYPE of this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])

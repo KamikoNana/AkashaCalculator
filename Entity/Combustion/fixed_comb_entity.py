@@ -1,7 +1,7 @@
 """
-This file contains the Entity for the Fixed Combustion Enginery emissions source. 
+This file contains the Entity for the Fixed Combustion Machinery emissions source. 
 - Defines the Entity Class and includes the calculation of the emissons for 1 element;
-Division between Fixed and Mobile Combustion Enginery lies in the diference of variables required.
+Division between Fixed and Mobile Combustion Machinery lies in the diference of variables required.
 All variables are described in the Akasha Guidebook avaliable in the GitHub repository
 """
 

@@ -1,3 +1,10 @@
+"""
+This file contains the Service for the Fixed Combustion Enginery emissions source. 
+- Includes all calculations for the Fixed Combustion Machinery class elements
+Division between Fixed and Mobile Combustion Enginery lies in the diference of variables required.
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import math
 
 import ghg_database
@@ -11,6 +18,9 @@ class FixedCombustionCalculations():
         self
         
     def total_emissions_fixedcomb():
+        """
+        Calculates the total sum of GHG emissions for this emissions source
+        """
         total_emissions_fixedcomb = 0
         emissions_fixedcomb =[]
         for source, data in ghg_database.fixed_combustion.items():
@@ -24,6 +34,9 @@ class FixedCombustionCalculations():
         return [total_emissions_fixedcomb, emissions_fixedcomb]
     
     def phase_emissions_fixedcomb():
+        """
+        Calculates the total sum of GHG emissions for this emissions source for each project phase considered
+        """
         construction_emissions_fixedcomb = 0
         operation_emissions_fixedcomb = 0
         for source, data in ghg_database.fixed_combustion.items():
@@ -41,6 +54,9 @@ class FixedCombustionCalculations():
         return [construction_emissions_fixedcomb, operation_emissions_fixedcomb]
     
     def total_emissions_peryear_fixedcomb():
+        """
+        Calculates the total commulative sum of GHG emissions for this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])

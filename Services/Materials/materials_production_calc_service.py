@@ -1,3 +1,9 @@
+"""
+This file contains the Service for the Materials Production emissions source. 
+- Includes all calculations for the Materials Production class elements
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import math
 
 import ghg_database
@@ -11,6 +17,9 @@ class MaterialsProductionCalculations():
         self
     
     def total_emissions_materialsprod():
+        """
+        Calculates the total sum of GHG emissions for this emissions source
+        """
         total_emissions_materialsprod = 0
         emissions_materialsprod =[]
         for source, data in ghg_database.materials_prod.items():
@@ -25,6 +34,9 @@ class MaterialsProductionCalculations():
         return [total_emissions_materialsprod, emissions_materialsprod]
     
     def phase_emissions_materialsprod():
+        """
+        Calculates the total sum of GHG emissions for this emissions source for each project phase considered
+        """
         construction_emissions_materialsprod = 0
         operation_emissions_materialsprod = 0
         for source, data in ghg_database.materials_prod.items():
@@ -43,6 +55,9 @@ class MaterialsProductionCalculations():
     
     
     def total_emissions_peryear_materialsprod():
+        """
+        Calculates the total commulative sum of GHG emissions for this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])

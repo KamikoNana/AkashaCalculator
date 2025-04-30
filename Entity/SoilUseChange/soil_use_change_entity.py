@@ -16,6 +16,7 @@ class SoilUseChange:
     def total_GHG_emissions(area, prev_seqfactor, new_seqfactor):
         """
         Calculates the total GHG emissions for 1 element in this class
+        - If this value is POSITIVE indicated that the new soil use sequestration factor is superior and so the change is beneficial
         """        
         prev_emissions_seq = prev_seqfactor * area
         new_emissions_seq = new_seqfactor * area

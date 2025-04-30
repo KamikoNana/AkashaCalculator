@@ -1,3 +1,10 @@
+"""
+This file contains the Service for the Mobile Combustion Machinery emissions source. 
+- Includes all calculations for the Mobile Combustion Machinery class elements
+Division between Fixed and Mobile Combustion Machinery lies in the diference of variables required.
+All variables are described in the Akasha Guidebook avaliable in the GitHub repository
+"""
+
 import math
 
 import ghg_database
@@ -11,6 +18,9 @@ class MobileCombustionCalculations():
         self
         
     def total_emissions_mobilecomb():
+        """
+        Calculates the total sum of GHG emissions for this emissions source
+        """
         total_emissions_mobilecomb = 0
         emissions_mobilecomb =[]
         for source, data in ghg_database.mobile_combustion.items():
@@ -26,6 +36,9 @@ class MobileCombustionCalculations():
         return [total_emissions_mobilecomb, emissions_mobilecomb]
     
     def phase_emissions_mobilecomb():
+        """
+        Calculates the total sum of GHG emissions for this emissions source for each project phase considered
+        """
         construction_emissions_mobilecomb = 0
         operation_emissions_mobilecomb = 0
         for source, data in ghg_database.mobile_combustion.items():
@@ -47,6 +60,9 @@ class MobileCombustionCalculations():
 
     
     def total_emissions_peryear_mobilecomb():
+        """
+        Calculates the total commulative sum of GHG emissions for this emissions source per year of the project horizon
+        """
         project_duration = ProjectPhasesService.project_duration()
         construction_duration = math.ceil(project_duration[0])
         operation_duration = math.ceil(project_duration[1])
