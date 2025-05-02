@@ -1,3 +1,8 @@
+'''
+This file contains all necessary elements to run the GUI
+More information can be found in the Akasha Guidebook avaliable in the GitHub repository
+'''
+
 import app
 
 import PySimpleGUI as sg
@@ -7,13 +12,12 @@ from matplotlib.figure import Figure
 from fpdf import FPDF
 import os
 
-#List with all emissions sources considered
 categories = ["All", "Energy", "Combustion Machinery", "Vehicles", "Materials", "Soil Use Change", "Waste Treatment"]
 
-# PDF Export Function
 def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_report.pdf"):
-    
-    
+    '''
+    Construction and export of a PDF report
+    '''
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
@@ -123,8 +127,10 @@ def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_repor
         filename, 
         "PDF saved in the same location as AkashaCalc.exe")
 
-# Plot Drawing
 def draw_figure(canvas, figure):
+    '''
+    Display graph outputs
+    '''
     if canvas.children:
         for child in canvas.winfo_children():
             child.destroy()
@@ -133,7 +139,9 @@ def draw_figure(canvas, figure):
     figure_canvas_agg.get_tk_widget().pack(side='top', fill='both', expand=1)
     return figure_canvas_agg
 
-# Layout
+'''
+Defining interface layout for each category
+'''
 layout = [
     [sg.Text("GHG Emission Calculator", font=('Helvetica', 16), justification='center', expand_x=True)],
     [sg.Text("Select Excel Input File:"), sg.Input(key="-FILE-"), sg.FileBrowse(file_types=(("Excel Files", "*.xlsx"),))],
@@ -154,7 +162,7 @@ layout = [
     ]
 ]
 
-# Window
+#Open GUI window
 window = sg.Window("GHG Emission Calculator Tool", layout, finalize=True, resizable=True)
 
 latest_summary = ""
@@ -162,8 +170,10 @@ latest_figures = []
 latest_figure = None
 current_plot_index = 0
 
-# Event Loop
 while True:
+    '''
+    Loop to define the outputs to be displayed for each category
+    '''
     event, values = window.read()
 
     if event == sg.WINDOW_CLOSED or event == "Exit":

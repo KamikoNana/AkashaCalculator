@@ -1,3 +1,8 @@
+'''
+This file contains all necessary elements to run the code, create a usable database and all outputs
+More information can be found in the Akasha Guidebook avaliable in the GitHub repository
+'''
+
 import pandas
 import matplotlib.pyplot as plt
 from itertools import zip_longest
@@ -22,6 +27,13 @@ from Services.SoilUseChange.soil_use_change_calc_service import SoilUseChangeCal
 from Services.Vehicles.vehicles_calc_service import VehiclesCalculations
 from Services.WasteTreatm.waste_treatm_calc_service import WasteTreatmentCalculations
 
+'''
+1. Transition between excel and .py format databse
+- Creates new dictionaries for each emissions category
+- Transposes the information for each element from the excel to a dictionary
+- Creates the complete database with dictionaries (emissions catgory) of disctionaries (each element in that category)
+'''
+
 project_phases = {}
 energy = {}
 vehicles = {}
@@ -36,6 +48,9 @@ file_path = "database_akasha.xlsx"
 xls = pandas.ExcelFile(file_path)
 
 def create_objects(xls):
+    ''' 
+    Get each element from the excel file and transposes into usable variables
+    '''
     sheet_data = pandas.read_excel(file_path, sheet_name="PROJECT_PHASES")
     for index, row in sheet_data.iterrows():
         phase = row['project_phase']
@@ -152,6 +167,9 @@ def create_objects(xls):
 
       
 def create_database():
+    '''
+    Creates the new .py file with the empty disctionaries for the emissions categories
+    '''
     data = {
         "project_phases": project_phases,
         "energy": energy,
@@ -165,8 +183,8 @@ def create_database():
     }
 
     with open('ghg_database.py', 'w') as f:
-        f.write("## This file contains GHG data imported from the excel file\n\n")
-        f.write("## Please ensure the data provided in the excel file is correct\n\n")
+        f.write("'''This file contains GHG data imported from the excel file submited''' \n")
+        f.write("'''Please ensure the data provided in the excel file is correct'''\n\n")
         
         for dict_name, dict_data in data.items():
             f.write(f"{dict_name} = {dict_data}\n\n")
@@ -175,11 +193,14 @@ def create_database():
 create_objects(xls) 
 create_database()
 
- #up is all about the database transition
- ##
+'''
+2. Functions to sum all values from all categories
+'''
 
-#function to sum all emissions
 def sum_all_num():
+    '''
+    Sums all categories emissions, resulting the total emissions of the project (numeric)
+    '''
     energy = EnergyCalculations.total_emissions_energy()[0]
     vehicles = VehiclesCalculations.total_emissions_vehicles_all()[0]
     fixed_machinery = FixedCombustionCalculations.total_emissions_fixedcomb()[0]
@@ -195,6 +216,9 @@ def sum_all_num():
     return total
 
 def sum_all_list():
+    '''
+    Sums all categories emissions, resulting the total commulative value for each year in the project horizon (list)
+    '''
     energy = EnergyCalculations.total_emissions_peryear_energy()
     vehicles = VehiclesCalculations.total_emissions_peryear_vehicles_all()
     fixed_machinery = FixedCombustionCalculations.total_emissions_peryear_fixedcomb()
@@ -207,7 +231,9 @@ def sum_all_list():
     
     return total
 
-#bellow about the plots and prepare data to be displayed   
+'''
+3. Graphic displayes - elaborates all plots for output display
+'''
  
 def plot_total_peryear():
     years = list(range(1, len(sum_all_list()) + 1))
@@ -279,9 +305,9 @@ def plot_materialsprod_peryear():
     
     return fig
     
-## materials used do not have a plot because its measured in total quantities and not by time
+## materials used do not have a plot because it's measured in total quantities and not by time
 
-## soil use change do not have a plot because its measured in a form of balance
+## soil use change do not have a plot because it's measured in a form of balance
 
 def plot_vehicles_all_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_all()) + 1))
@@ -409,9 +435,9 @@ def plot_waste_gas_peryear():
     
     return fig
 
-#above are defined the plots
-##
-#bellow is presented the number data
+'''
+4. Numeric plots - Elaborates all numeric outputs for display
+'''
 
 def show_total():
     all = sum_all_num()
