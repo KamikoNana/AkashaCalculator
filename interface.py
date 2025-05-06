@@ -145,6 +145,7 @@ Defining interface layout for each category
 layout = [
     [sg.Text("GHG Emission Calculator", font=('Helvetica', 16), justification='center', expand_x=True)],
     [sg.Text("Select Excel Input File:"), sg.Input(key="-FILE-"), sg.FileBrowse(file_types=(("Excel Files", "*.xlsx"),))],
+    [sg.Text("Excel file selected should be named 'database_akasha' ")],
     [sg.Text("Select Emission Source:"), sg.Combo(categories, default_value="All", key="-CATEGORY-", readonly=True)],
     [sg.Text("Report Title:"), sg.Input("Akasha GHG Emissions Report", key="-TITLE-", size=(50, 1))],
     [

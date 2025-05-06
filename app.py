@@ -305,9 +305,9 @@ def plot_materialsprod_peryear():
     
     return fig
     
-## materials used do not have a plot because it's measured in total quantities and not by time
+## materials used do not have a plot because it's measured in total quantities
 
-## soil use change do not have a plot because it's measured in a form of balance
+## soil use change do not have a plot because it's measured in a form of total balance
 
 def plot_vehicles_all_peryear():
     years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_all()) + 1))
