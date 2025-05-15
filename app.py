@@ -210,8 +210,12 @@ def sum_all_num():
     soil = SoilUseChangeCalculations.total_emissions_soilusechange()[0]
     waste = WasteTreatmentCalculations.total_emissions_waste_all()[0]
     
-    total = energy + vehicles + fixed_machinery + mobile_machinery + materials_production + materials_use\
-        + soil + waste
+    if soil > 0:
+        total = energy + vehicles + fixed_machinery + mobile_machinery + materials_production + materials_use\
+             + waste
+    elif soil < 0:
+        total = energy + vehicles + fixed_machinery + mobile_machinery + materials_production + materials_use\
+             + soil + waste
     
     return total
 
@@ -244,7 +248,7 @@ def plot_total_peryear():
 
     ax.set_title('Total Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -258,7 +262,7 @@ def plot_energy_peryear():
 
     ax.set_title('Energy - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -272,7 +276,7 @@ def plot_fixedcomb_peryear():
 
     ax.set_title('Fixed Combustion - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -286,7 +290,7 @@ def plot_mobilecomb_peryear():
 
     ax.set_title('Mobile Combustion - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -300,7 +304,7 @@ def plot_materialsprod_peryear():
 
     ax.set_title('Materials Production - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -318,7 +322,7 @@ def plot_vehicles_all_peryear():
 
     ax.set_title('All Vehicles - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -332,7 +336,7 @@ def plot_vehicles_road_peryear():
 
     ax.set_title('ROAD Vehicles - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -346,7 +350,7 @@ def plot_vehicles_train_peryear():
 
     ax.set_title('TRAIN Vehicles - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -360,7 +364,7 @@ def plot_vehicles_ship_peryear():
 
     ax.set_title('SHIP Vehicles - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -374,7 +378,7 @@ def plot_vehicles_air_peryear():
 
     ax.set_title('AIR Vehicles - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -388,7 +392,7 @@ def plot_waste_all_peryear():
 
     ax.set_title('All Waste Treatments - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -402,7 +406,7 @@ def plot_waste_solids_peryear():
 
     ax.set_title('WATER Treatment - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -416,7 +420,7 @@ def plot_waste_water_peryear():
 
     ax.set_title('SOLID Treatment - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -430,7 +434,7 @@ def plot_waste_gas_peryear():
 
     ax.set_title('GAS Treatment - Cumulative Emissions Over Time')
     ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tons of CO2e)')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
     ax.grid(True)
     
     return fig
@@ -444,7 +448,7 @@ def show_total():
     
     show = (
         "Total GHG Emissions: \n"
-        f"{all} CO2eq"
+        f"{all} tonCO2eq"
     )
     
     return show
@@ -455,8 +459,8 @@ def show_energy():
     
     show = (
         "ENERGY GHG Emissions \n"
-        f"Energy Emissions: {all} CO2eq \n"
-        f"Energy Emissions Balance: {balance} CO2eq \n"
+        f"Energy Emissions: {all} tonCO2eq \n"
+        f"Energy Emissions Balance: {balance} tonCO2eq \n"
     )
     
     return show
@@ -471,11 +475,11 @@ def show_vehicles():
     
     show = (
         "VEHICLES GHG Emissions \n"
-        f"All Vehicles Emissions: {all} CO2eq \n"
-        f"- Road Vehicles Emissions: {road} CO2eq \n"
-        f"- Train Vehicles Emissions: {train} CO2eq \n"
-        f"- Ship Vehicles Emissions: {ship} CO2eq \n"
-        f"- Air Vehicles Emissions: {air} CO2eq \n"
+        f"All Vehicles Emissions: {all} tonCO2eq \n"
+        f"- Road Vehicles Emissions: {road} tonCO2eq \n"
+        f"- Train Vehicles Emissions: {train} tonCO2eq \n"
+        f"- Ship Vehicles Emissions: {ship} tonCO2eq \n"
+        f"- Air Vehicles Emissions: {air} tonCO2eq \n"
     )
     
     return show
@@ -487,9 +491,9 @@ def show_combustionmachinery():
     
     show = (
         "COMBUSTION MACHINERY GHG Emissions \n"
-        f"All Combustion Machinery Emissions: {all} CO2eq \n"
-        f"- Fixed Combustion Machinery Emissions: {fixed} CO2eq \n"
-        f"- Mobile Combustion Machinery Emissions: {mobile} CO2eq \n"
+        f"All Combustion Machinery Emissions: {all} tonCO2eq \n"
+        f"- Fixed Combustion Machinery Emissions: {fixed} tonCO2eq \n"
+        f"- Mobile Combustion Machinery Emissions: {mobile} tonCO2eq \n"
     )
     
     return show
@@ -500,8 +504,8 @@ def show_materials():
     
     show= (
         "MATERIALS GHG Emissions \n"
-        f"- Emissions for Materials Used: {used} CO2eq \n"
-        f"- Emissions for Materials Production: {produced} CO2eq \n"
+        f"- Emissions for Materials Used: {used} tonCO2eq \n"
+        f"- Emissions for Materials Production: {produced} tonCO2eq \n"
     )
 
     return show
@@ -511,8 +515,7 @@ def show_soilusechange():
     
     show = (
         "SOIL USE CHANGE GHG Emissions \n"
-        f"Soil Use Change Impact: {all} CO2eq \n"
-        "NOTE: If this value is negative, it represents that the soil use change was beneficial and the CO2 capture is higher than before the project implementation \n"
+        f"Soil Use Change Impact: {all} tonCO2eq \n"
     )
     
     return show
@@ -525,10 +528,10 @@ def show_wastetreatment():
     
     show = (
         "All WASTE TREATMENT GHG Emissions \n"
-        f"All Waste Treatment Emissions: {all} CO2eq \n"
-        f"- Wastewater Treatment Emissions: {water} CO2eq \n"
-        f"- Solid waste Treatment Emissions: {solid} CO2eq \n"
-        f"- Gas stream Treatment Emissions: {gas} CO2eq \n"
+        f"All Waste Treatment Emissions: {all} tonCO2eq \n"
+        f"- Wastewater Treatment Emissions: {water} tonCO2eq \n"
+        f"- Solid waste Treatment Emissions: {solid} tonCO2eq \n"
+        f"- Gas stream Treatment Emissions: {gas} tonCO2eq \n"
     )
     
     return show

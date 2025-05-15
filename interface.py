@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 from fpdf import FPDF
 import os
 
-categories = ["All", "Energy", "Combustion Machinery", "Vehicles", "Materials", "Soil Use Change", "Waste Treatment"]
+categories = ["All", "Energy", "Vehicles", "Combustion Machinery", "Materials", "Soil Use Change", "Waste Treatment"]
 
 def export_full_pdf(title, summary, figure_list, filename="akasha_ghg_full_report.pdf"):
     '''

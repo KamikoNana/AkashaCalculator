@@ -35,10 +35,10 @@ class Vehicles:
         Calculates the total GHG emissions for 1 element in this class
         """
         total_distance = km * n
-        CO2_totalemissions = total_distance * co2_emissions 
-        CH4_totalemissions = total_distance * ch4_emissions * ch4_cf
-        N2O_totalemissions = total_distance * n2o_emissions * n2o_cf
-        total_emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+        CO2_totalemissions = co2_emissions 
+        CH4_totalemissions = ch4_emissions * ch4_cf
+        N2O_totalemissions = n2o_emissions * n2o_cf
+        total_emissions = (CO2_totalemissions + CH4_totalemissions + N2O_totalemissions) * total_distance
         
         if Phase[phase] == Phase.CONSTRUCTION:
             duration = float(ProjectPhasesService.project_duration()[0])

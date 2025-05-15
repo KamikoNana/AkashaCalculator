@@ -22,20 +22,20 @@ class WasteTreatment:
         self.treatment = treatment                              #treatment type (str)
         self.stream = stream                                    #used to gategorize the stream (enum WasteTreatment.WasteType)
         self.quantity = quantity                                #quantity of treated materials per year [L/year] (float)
-        self.co2_emissions = co2_emissions                      #emissions of the fuel use [kgCO2/L] (float)
-        self.ch4_emissions = ch4_emissions                      #emissions of the fuel use [kgCH4/km] (float)
+        self.co2_emissions = co2_emissions                      #emissions of the fuel use [tonCO2/L] (float)
+        self.ch4_emissions = ch4_emissions                      #emissions of the fuel use [tonCH4/L] (float)
         self.ch4_cf = ch4_cf                                    #conversion factor of CH4 to CO2eq [adimensional] (float)                          
-        self.n2o_emissions = n2o_emissions                      #emissions of the fuel use [kgN2O/km] (float)
+        self.n2o_emissions = n2o_emissions                      #emissions of the fuel use [tonN2O/L] (float)
         self.n2o_cf = n2o_cf                                    #conversion factor of CH4 to CO2eq [adimensional] (float)
     
     def total_GHG_emissions(phase, quantity, co2_emissions, ch4_emissions, ch4_cf, n2o_emissions, n2o_cf):
         """
         Calculates the total GHG emissions for 1 element in this class
         """        
-        CO2_totalemissions = quantity * co2_emissions 
-        CH4_totalemissions = quantity * ch4_emissions * ch4_cf
-        N2O_totalemissions = quantity * n2o_emissions * n2o_cf
-        total_emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
+        CO2_totalemissions = co2_emissions 
+        CH4_totalemissions = ch4_emissions * ch4_cf
+        N2O_totalemissions = n2o_emissions * n2o_cf
+        total_emissions = (CO2_totalemissions + CH4_totalemissions + N2O_totalemissions) * quantity
         
         if Phase[phase] == Phase.CONSTRUCTION:
             duration = float(ProjectPhasesService.project_duration()[0])

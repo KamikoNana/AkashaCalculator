@@ -21,7 +21,7 @@ class SoilUseChange:
         prev_emissions_seq = prev_seqfactor * area
         new_emissions_seq = new_seqfactor * area
 
-        return (new_emissions_seq - prev_emissions_seq)
+        return (prev_emissions_seq - new_emissions_seq)
     
     def to_dict(self):
         """

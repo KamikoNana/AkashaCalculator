@@ -64,26 +64,40 @@ class EnergyCalculations():
         """
         energy = 0
         total_consumed = 0
+        quantity_consumed = 0
         mean_consumed = 0
         n_consumed = 0
         total_produced = 0
+        quantity_produced = 0
+        mean_produced = 0
+        n_produced = 0
         total_balance = 0
         balance = []
+        quantity_balance = 0
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
             
             if EnergyType[data.type] == EnergyType.CONSUMED:
+                quantity_consumed = quantity_consumed + data.quantity
+                
                 total_consumed = total_consumed + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
+                
                 n_consumed = n_consumed + 1
                 mean_consumed = total_consumed / n_consumed
                 
             if EnergyType[data.type] == EnergyType.PRODUCED:
+                quantity_produced = quantity_produced + data.quantity
+                
                 total_produced = total_produced + Energy.total_GHG_emissions(data.phase, data.quantity, data.ef)
+                
+                n_produced = n_produced + 1
+                mean_produced = total_produced / n_produced
                 
             else:
                 pass
             
-            total_balance = total_consumed - total_produced
+            quantity_balance = quantity_consumed - quantity_produced
+            total_balance = (mean_consumed * quantity_consumed) - (mean_produced * quantity_produced)
         
         for source, data in ghg_database.energy.items():
             data = Energy.energy_from_dict(data)
@@ -95,7 +109,7 @@ class EnergyCalculations():
             else:
                 pass
     
-        return [total_balance, balance]
+        return [total_balance, quantity_balance, balance]
     
     def total_emissions_peryear_energy():
         """
