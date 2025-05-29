@@ -11,6 +11,12 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from fpdf import FPDF
 import os
+import pandas
+
+file_path = "database_akasha.xlsx"
+xls = pandas.ExcelFile(file_path)
+app.create_objects(xls) 
+app.create_database()
 
 categories = ["All", "Energy", "Vehicles", "Combustion Machinery", "Materials", "Soil Use Change", "Waste Treatment"]
 
