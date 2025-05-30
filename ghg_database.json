@@ -47,9 +47,9 @@
             "distance": 15000,
             "n_vehicles": 4,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         },
         "Personnel Transport": {
@@ -59,9 +59,9 @@
             "distance": 8000,
             "n_vehicles": 2,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         },
         "Material Transport": {
@@ -71,9 +71,9 @@
             "distance": 12000,
             "n_vehicles": 3,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         },
         "Soil Excavation Trucks": {
@@ -83,9 +83,9 @@
             "distance": 10000,
             "n_vehicles": 2,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         },
         "Reservoir Liner Trucks": {
@@ -95,9 +95,9 @@
             "distance": 7000,
             "n_vehicles": 1,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         },
         "General Utility Vehicles": {
@@ -107,9 +107,9 @@
             "distance": 9000,
             "n_vehicles": 2,
             "co2_emissions": 0.0015,
-            "ch4_emissions": 0,
+            "ch4_emissions": 1e-05,
             "ch4_cf": 25,
-            "n2o_emissions": 0,
+            "n2o_emissions": 1e-05,
             "n2o_cf": 298
         }
     },

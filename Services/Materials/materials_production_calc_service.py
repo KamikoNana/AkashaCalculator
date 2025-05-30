@@ -63,22 +63,43 @@ class MaterialsProductionCalculations():
         operation_duration = math.ceil(self.project_durations[1])
         full_duration = math.ceil(self.project_durations[2])
         
+        rem_construction = self.project_durations[0] % 1
+        rem_operation = self.project_durations[1] % 1
+        
         total_emissions_peryear_construction = [0] * construction_duration
         total_emissions_peryear_operation = [0] * operation_duration
+        
+        emissions_peryear_construction = 0
+        emissions_peryear_operation = 0
   
         for source, data in self.ghg_database["materials_prod"].items():
             product = MaterialsProduction.materialprod_from_dict(data)
             
             if Phase[product.phase] == Phase.CONSTRUCTION:
                 emissions = product.quantity * product.ef
-                for i in range(construction_duration):
-                    total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
+                
+                emissions_peryear_construction += emissions
+                
             elif Phase[product.phase] == Phase.OPERATION:
                 emissions = product.quantity * product.ef
-                for i in range(operation_duration):
-                    total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
+                
+                emissions_peryear_operation += emissions
+                
             else:
                 pass
+        
+        for i in range (construction_duration):
+            total_emissions_peryear_construction[i] = emissions_peryear_construction
+        for i in range (operation_duration):
+            total_emissions_peryear_operation[i] = emissions_peryear_operation
+        
+        if rem_construction != 0:
+            total_emissions_peryear_construction[-1] = (rem_construction * emissions_peryear_construction) + ( (1-rem_construction) * emissions_peryear_operation)
+            total_emissions_peryear_operation[-1] = (rem_construction * emissions_peryear_operation)
+        if rem_operation != 0:
+            total_emissions_peryear_operation[-1] = (rem_operation * emissions_peryear_operation) + (rem_construction * emissions_peryear_operation)
+        if (rem_construction + rem_operation) > 1:
+            total_emissions_peryear_operation[-1] = ((rem_construction + rem_operation) - 1) * emissions_peryear_operation  
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         

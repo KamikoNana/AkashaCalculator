@@ -102,8 +102,14 @@ class WasteTreatmentCalculations():
         operation_duration = math.ceil(self.project_durations[1])
         full_duration = math.ceil(self.project_durations[2])
         
+        rem_construction = self.project_durations[0] % 1
+        rem_operation = self.project_durations[1] % 1
+        
         total_emissions_peryear_construction = [0] * construction_duration
         total_emissions_peryear_operation = [0] * operation_duration
+        
+        emissions_peryear_construction = 0
+        emissions_peryear_operation = 0
         
         for source, data in self.ghg_database["waste_treatm"].items():
             waste = WasteTreatment.waste_from_dict(data)
@@ -114,8 +120,7 @@ class WasteTreatmentCalculations():
                 N2O_totalemissions = waste.quantity * waste.n2o_emissions * waste.n2o_cf
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
-                for i in range(construction_duration):
-                    total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
+                emissions_peryear_construction += emissions
                     
             elif Phase[waste.phase] == Phase.OPERATION:
                 CO2_totalemissions = waste.quantity * waste.co2_emissions 
@@ -123,11 +128,22 @@ class WasteTreatmentCalculations():
                 N2O_totalemissions = waste.quantity * waste.n2o_emissions * waste.n2o_cf
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
-                for i in range(operation_duration):
-                    total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
+                emissions_peryear_operation += emissions
             
             else:
                 pass
+        
+        for i in range (construction_duration):
+            total_emissions_peryear_construction[i] = emissions_peryear_construction
+        for i in range (operation_duration):
+            total_emissions_peryear_operation[i] = emissions_peryear_operation
+        
+        if rem_construction != 0:
+            total_emissions_peryear_construction[-1] = (rem_construction * emissions_peryear_construction) + ( (1-rem_construction) * emissions_peryear_operation)
+        if rem_operation != 0:
+            total_emissions_peryear_operation[-1] = (rem_operation * emissions_peryear_operation) 
+        if (rem_construction + rem_operation) > 1:
+            total_emissions_peryear_operation[-1] = ((rem_construction + rem_operation) - 1) * emissions_peryear_operation 
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         
@@ -144,8 +160,14 @@ class WasteTreatmentCalculations():
         operation_duration = math.ceil(self.project_durations[1])
         full_duration = math.ceil(self.project_durations[2])
         
+        rem_construction = self.project_durations[0] % 1
+        rem_operation = self.project_durations[1] % 1
+        
         total_emissions_peryear_construction = [0] * construction_duration
         total_emissions_peryear_operation = [0] * operation_duration
+        
+        emissions_peryear_construction = 0
+        emissions_peryear_operation = 0
         
         for source, data in self.ghg_database["waste_treatm"].items():
             waste = WasteTreatment.waste_from_dict(data)
@@ -158,8 +180,7 @@ class WasteTreatmentCalculations():
                     N2O_totalemissions = waste.quantity * waste.n2o_emissions * waste.n2o_cf
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
-                    for i in range(construction_duration):
-                        total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
+                    emissions_peryear_construction += emissions
                     
                 elif Phase[waste.phase] == Phase.OPERATION:
                     CO2_totalemissions = waste.quantity * waste.co2_emissions 
@@ -167,11 +188,23 @@ class WasteTreatmentCalculations():
                     N2O_totalemissions = waste.quantity * waste.n2o_emissions * waste.n2o_cf
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                     
-                    for i in range(operation_duration):
-                        total_emissions_peryear_operation[i] = total_emissions_peryear_operation[i] + emissions
+                    emissions_peryear_operation += emissions
                 
                 else:
                     pass
+        
+        for i in range (construction_duration):
+            total_emissions_peryear_construction[i] = emissions_peryear_construction
+        for i in range (operation_duration):
+            total_emissions_peryear_operation[i] = emissions_peryear_operation
+        
+        if rem_construction != 0:
+            total_emissions_peryear_construction[-1] = (rem_construction * emissions_peryear_construction) + ( (1-rem_construction) * emissions_peryear_operation)
+            total_emissions_peryear_operation[-1] = (rem_construction * emissions_peryear_operation)
+        if rem_operation != 0:
+            total_emissions_peryear_operation[-1] = (rem_operation * emissions_peryear_operation) + (rem_construction * emissions_peryear_operation) 
+        if (rem_construction + rem_operation) > 1:
+            total_emissions_peryear_operation[-1] = ((rem_construction + rem_operation) - 1) * emissions_peryear_operation 
         
         total_emissions_peryear = total_emissions_peryear_construction + total_emissions_peryear_operation
         

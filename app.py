@@ -9,6 +9,7 @@ from itertools import zip_longest
 import json
 import os
 import sys
+import math
 
 from Entity.Combustion.fixed_comb_entity import FixedCombustion
 from Entity.Combustion.mobile_comb_entity import MobileCombustion
@@ -51,6 +52,8 @@ def create_objects(xls, file_path):
     ''' 
     Get each element from the excel file and transposes into usable variables
     '''
+    pandas.options.display.float_format = '{:.30f}'.format
+    
     sheet_data = pandas.read_excel(file_path, sheet_name="PROJECT_PHASES")
     for index, row in sheet_data.iterrows():
         phase = row['project_phase']
@@ -248,10 +251,15 @@ def sum_all_list():
     fixed_machinery = fixed_combustion_calculations.total_emissions_peryear_fixedcomb()
     mobile_machinery = mobile_combustion_calculations.total_emissions_peryear_mobilecomb()
     materials_production = materials_production_calculations.total_emissions_peryear_materialsprod()
+    materials_use = materials_use_calculations.total_emissions_materialsuse()[0]
+    soil_use = soil_use_change_calculations.total_emissions_soilusechange()[0]
     waste = waste_treatment_calculations.total_emissions_peryear_waste_all()
     
     total = [sum(values) for values in zip_longest(
             energy, vehicles, fixed_machinery, mobile_machinery, materials_production, waste, fillvalue=0)]
+    
+    starting_value = materials_use + soil_use
+    total = [year_emission + starting_value for year_emission in total]
     
     return total
 
@@ -260,8 +268,10 @@ def sum_all_list():
 '''
  
 def plot_total_peryear():
-    years = list(range(1, len(sum_all_list()) + 1))
+    years = list(range(0, len(sum_all_list()) + 1))
     emissions = sum_all_list()
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -274,9 +284,11 @@ def plot_total_peryear():
     return fig
     
 def plot_energy_peryear():
-    years = list(range(1, len(energy_calculations.total_emissions_peryear_energy()) + 1))
     emissions = energy_calculations.total_emissions_peryear_energy()
-
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
+    
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
 
@@ -288,8 +300,10 @@ def plot_energy_peryear():
     return fig
 
 def plot_vehicles_all_peryear():
-    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_all()) + 1))
     emissions = vehicles_calculations.total_emissions_peryear_vehicles_all()
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -302,8 +316,10 @@ def plot_vehicles_all_peryear():
     return fig
     
 def plot_vehicles_road_peryear():
-    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("ROAD")) + 1))
     emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("ROAD")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -316,8 +332,10 @@ def plot_vehicles_road_peryear():
     return fig
     
 def plot_vehicles_train_peryear():
-    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("TRAIN")) + 1))
     emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("TRAIN")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -330,8 +348,10 @@ def plot_vehicles_train_peryear():
     return fig
     
 def plot_vehicles_ship_peryear():
-    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("SHIP")) + 1))
     emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("SHIP")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -344,8 +364,10 @@ def plot_vehicles_ship_peryear():
     return fig
     
 def plot_vehicles_air_peryear():
-    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("AIR")) + 1))
     emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("AIR")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -358,8 +380,10 @@ def plot_vehicles_air_peryear():
     return fig
 
 def plot_fixedcomb_peryear():
-    years = list(range(1, len(fixed_combustion_calculations.total_emissions_peryear_fixedcomb()) + 1))
     emissions = fixed_combustion_calculations.total_emissions_peryear_fixedcomb()
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -372,8 +396,10 @@ def plot_fixedcomb_peryear():
     return fig
 
 def plot_mobilecomb_peryear():
-    years = list(range(1, len(mobile_combustion_calculations.total_emissions_peryear_mobilecomb()) + 1))
     emissions = mobile_combustion_calculations.total_emissions_peryear_mobilecomb()
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -386,8 +412,10 @@ def plot_mobilecomb_peryear():
     return fig
 
 def plot_materialsprod_peryear():
-    years = list(range(1, len(materials_production_calculations.total_emissions_peryear_materialsprod()) + 1))
     emissions = materials_production_calculations.total_emissions_peryear_materialsprod()
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -404,8 +432,10 @@ def plot_materialsprod_peryear():
 ## soil use change do not have a plot because it's measured in a form of total balance
     
 def plot_waste_all_peryear():
-    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_all()) + 1))
     emissions = waste_treatment_calculations.total_emissions_peryear_waste_all()
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -418,8 +448,10 @@ def plot_waste_all_peryear():
     return fig
     
 def plot_waste_solids_peryear():
-    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("WATER")) + 1))
     emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("WATER")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -432,8 +464,10 @@ def plot_waste_solids_peryear():
     return fig
 
 def plot_waste_water_peryear():
-    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("SOLID")) + 1))
     emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("SOLID")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -446,8 +480,10 @@ def plot_waste_water_peryear():
     return fig
 
 def plot_waste_gas_peryear():
-    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("GAS")) + 1))
     emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("GAS")
+    years = list(range(0, len(emissions) + 1))
+    
+    emissions = [0] + emissions
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
