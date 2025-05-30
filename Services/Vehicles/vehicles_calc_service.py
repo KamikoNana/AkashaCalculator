@@ -106,20 +106,20 @@ class VehiclesCalculations():
             vehicle = Vehicles.vehicle_from_dict(data)
             
             if Phase[vehicle.phase] == Phase.CONSTRUCTION:
-                total_fuel = vehicle.km * vehicle.n
-                CO2_totalemissions = total_fuel * vehicle.co2_emissions 
-                CH4_totalemissions = total_fuel * vehicle.ch4_emissions * vehicle.ch4_cf
-                N2O_totalemissions = total_fuel * vehicle.n2o_emissions * vehicle.n2o_cf
+                total_distance = vehicle.km * vehicle.n
+                CO2_totalemissions = vehicle.co2_emissions * total_distance
+                CH4_totalemissions = vehicle.ch4_emissions * vehicle.ch4_cf * total_distance
+                N2O_totalemissions = vehicle.n2o_emissions * vehicle.n2o_cf * total_distance
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
                 for i in range(construction_duration):
                     total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
             elif Phase[vehicle.phase] == Phase.OPERATION:
-                total_fuel = vehicle.km * vehicle.n
-                CO2_totalemissions = total_fuel * vehicle.co2_emissions 
-                CH4_totalemissions = total_fuel * vehicle.ch4_emissions * vehicle.ch4_cf
-                N2O_totalemissions = total_fuel * vehicle.n2o_emissions * vehicle.n2o_cf
+                total_distance = vehicle.km * vehicle.n
+                CO2_totalemissions = vehicle.co2_emissions * total_distance
+                CH4_totalemissions = vehicle.ch4_emissions * vehicle.ch4_cf * total_distance
+                N2O_totalemissions = vehicle.n2o_emissions * vehicle.n2o_cf * total_distance
                 emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                 
                 for i in range(operation_duration):
@@ -151,20 +151,20 @@ class VehiclesCalculations():
             if vehicle.type == type:
                 
                 if Phase[vehicle.phase] == Phase.CONSTRUCTION:
-                    total_fuel = vehicle.km * vehicle.n
-                    CO2_totalemissions = total_fuel * vehicle.co2_emissions 
-                    CH4_totalemissions = total_fuel * vehicle.ch4_emissions * vehicle.ch4_cf
-                    N2O_totalemissions = total_fuel * vehicle.n2o_emissions * vehicle.n2o_cf
+                    total_distance = vehicle.km * vehicle.n
+                    CO2_totalemissions = vehicle.co2_emissions * total_distance
+                    CH4_totalemissions = vehicle.ch4_emissions * vehicle.ch4_cf * total_distance
+                    N2O_totalemissions = vehicle.n2o_emissions * vehicle.n2o_cf * total_distance
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                     
                     for i in range(construction_duration):
                         total_emissions_peryear_construction[i] = total_emissions_peryear_construction[i] + emissions
                     
                 elif Phase[vehicle.phase] == Phase.OPERATION:
-                    total_fuel = vehicle.km * vehicle.n
-                    CO2_totalemissions = total_fuel * vehicle.co2_emissions 
-                    CH4_totalemissions = total_fuel * vehicle.ch4_emissions * vehicle.ch4_cf
-                    N2O_totalemissions = total_fuel * vehicle.n2o_emissions * vehicle.n2o_cf
+                    total_distance = vehicle.km * vehicle.n
+                    CO2_totalemissions = vehicle.co2_emissions * total_distance
+                    CH4_totalemissions = vehicle.ch4_emissions * vehicle.ch4_cf * total_distance
+                    N2O_totalemissions = vehicle.n2o_emissions * vehicle.n2o_cf * total_distance
                     emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
                     
                     for i in range(operation_duration):

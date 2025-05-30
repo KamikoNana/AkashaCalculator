@@ -1,0 +1,320 @@
+{
+    "project_phases": {
+        "CONSTRUCTION": {
+            "phase": "CONSTRUCTION",
+            "years": 2.5
+        },
+        "OPERATION": {
+            "phase": "OPERATION",
+            "years": 50.0
+        }
+    },
+    "energy": {
+        "Grid Electricity for Site Equipment": {
+            "phase": "CONSTRUCTION",
+            "type": "CONSUMED",
+            "source": "Grid Electricity for Site Equipment",
+            "quantity": 0.5,
+            "ef": 0.55
+        },
+        "Pumping Operations": {
+            "phase": "OPERATION",
+            "type": "CONSUMED",
+            "source": "Pumping Operations",
+            "quantity": 22,
+            "ef": 0.55
+        },
+        "Construction Site Lighting": {
+            "phase": "CONSTRUCTION",
+            "type": "CONSUMED",
+            "source": "Construction Site Lighting",
+            "quantity": 0.3,
+            "ef": 0.55
+        },
+        "Hydropower Energy Generation": {
+            "phase": "OPERATION",
+            "type": "PRODUCED",
+            "source": "Hydropower Energy Generation",
+            "quantity": 2325.35416666667,
+            "ef": 0.004
+        }
+    },
+    "vehicles": {
+        "Construction Trucks": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "Construction Trucks",
+            "distance": 15000,
+            "n_vehicles": 4,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        },
+        "Personnel Transport": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "Personnel Transport",
+            "distance": 8000,
+            "n_vehicles": 2,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        },
+        "Material Transport": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "Material Transport",
+            "distance": 12000,
+            "n_vehicles": 3,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        },
+        "Soil Excavation Trucks": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "Soil Excavation Trucks",
+            "distance": 10000,
+            "n_vehicles": 2,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        },
+        "Reservoir Liner Trucks": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "Reservoir Liner Trucks",
+            "distance": 7000,
+            "n_vehicles": 1,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        },
+        "General Utility Vehicles": {
+            "phase": "CONSTRUCTION",
+            "type": "ROAD",
+            "vehicle": "General Utility Vehicles",
+            "distance": 9000,
+            "n_vehicles": 2,
+            "co2_emissions": 0.0015,
+            "ch4_emissions": 0,
+            "ch4_cf": 25,
+            "n2o_emissions": 0,
+            "n2o_cf": 298
+        }
+    },
+    "fixed_combustion": {
+        "Site Generators": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Site Generators",
+            "quantity": 10000,
+            "n_machines": 1,
+            "ef": 0.00268
+        },
+        "Water Pumps Backup": {
+            "phase": "OPERATION",
+            "enginery_fueltype": "Water Pumps Backup",
+            "quantity": 5000,
+            "n_machines": 1,
+            "ef": 0.00268
+        },
+        "Workshop Generator": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Workshop Generator",
+            "quantity": 3000,
+            "n_machines": 1,
+            "ef": 0.00268
+        },
+        "Desalination Backup": {
+            "phase": "OPERATION",
+            "enginery_fueltype": "Desalination Backup",
+            "quantity": 4000,
+            "n_machines": 1,
+            "ef": 0.00268
+        }
+    },
+    "mobile_combustion": {
+        "Excavators": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Excavators",
+            "quantity": 12000,
+            "n_machines": 2,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        },
+        "Cranes": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Cranes",
+            "quantity": 8000,
+            "n_machines": 1,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        },
+        "Concrete Mixers": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Concrete Mixers",
+            "quantity": 7000,
+            "n_machines": 2,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        },
+        "Bulldozers": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Bulldozers",
+            "quantity": 11000,
+            "n_machines": 2,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        },
+        "Tippers": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Tippers",
+            "quantity": 9000,
+            "n_machines": 2,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        },
+        "Water Trucks": {
+            "phase": "CONSTRUCTION",
+            "enginery_fueltype": "Water Trucks",
+            "quantity": 6000,
+            "n_machines": 1,
+            "co2_emissions": 0.00268,
+            "ch4_emissions": 1e-06,
+            "ch4_cf": 25,
+            "n2o_emissions": 1e-06,
+            "n2o_cf": 298
+        }
+    },
+    "materials_prod": {},
+    "materials_use": {
+        "Concrete": {
+            "phase": "CONSTRUCTION",
+            "material": "Concrete",
+            "quantity": 5000000,
+            "ef": 0.00013
+        },
+        "Steel": {
+            "phase": "CONSTRUCTION",
+            "material": "Steel",
+            "quantity": 800000,
+            "ef": 0.0019
+        },
+        "HDPE Geomembrane": {
+            "phase": "CONSTRUCTION",
+            "material": "HDPE Geomembrane",
+            "quantity": 120000,
+            "ef": 0.003
+        },
+        "Asphalt": {
+            "phase": "CONSTRUCTION",
+            "material": "Asphalt",
+            "quantity": 300000,
+            "ef": 6e-05
+        },
+        "Gravel": {
+            "phase": "CONSTRUCTION",
+            "material": "Gravel",
+            "quantity": 1000000,
+            "ef": 5e-06
+        },
+        "Reinforced Bar": {
+            "phase": "CONSTRUCTION",
+            "material": "Reinforced Bar",
+            "quantity": 400000,
+            "ef": 0.0018
+        }
+    },
+    "soil_use_change": {
+        "upper reservoir": {
+            "change": "upper reservoir",
+            "area": 69448.29,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "reservoire",
+            "new_seqfactor": 0
+        },
+        "lower reservoire": {
+            "change": "lower reservoire",
+            "area": 100694.46,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "reservoire",
+            "new_seqfactor": 0
+        },
+        "dam": {
+            "change": "dam",
+            "area": 11984.17,
+            "previous_soiluse": "shrubland",
+            "prev_seqfactor": 0.00026,
+            "new_soiluse": "dam",
+            "new_seqfactor": 0
+        },
+        "support station": {
+            "change": "support station",
+            "area": 3307.02,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "station",
+            "new_seqfactor": 0
+        },
+        "desalination station": {
+            "change": "desalination station",
+            "area": 3781.28,
+            "previous_soiluse": "sparse vegetation",
+            "prev_seqfactor": 2e-05,
+            "new_soiluse": "desalination station",
+            "new_seqfactor": 0
+        },
+        "access roads": {
+            "change": "access roads",
+            "area": 26066.12,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "roads",
+            "new_seqfactor": 0
+        },
+        "eletric grid": {
+            "change": "eletric grid",
+            "area": 19730,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "eletric grid",
+            "new_seqfactor": 0
+        },
+        "pipelines": {
+            "change": "pipelines",
+            "area": 219279.81,
+            "previous_soiluse": "grassland",
+            "prev_seqfactor": 0.0004,
+            "new_soiluse": "pipelines",
+            "new_seqfactor": 0
+        }
+    },
+    "waste_treatm": {}
+}
