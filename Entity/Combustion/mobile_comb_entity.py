@@ -5,7 +5,6 @@ Division between Fixed and Mobile Combustion Machinery lies in the diference of 
 All variables are described in the Akasha Guidebook avaliable in the GitHub repository
 """
 
-from Services.ProjectPhases.project_phases_service import ProjectPhasesService
 from Entity.Combustion.combustion_eng_entity import CombustionEnginery
 from Entity.ProjectPhases.project_phases_entity import Phase
 
@@ -18,21 +17,22 @@ class MobileCombustion(CombustionEnginery):
         self.n2o_emissions = n2o_emissions                          #emissions of the fuel [tonN2O/km] (float)
         self.n2o_cf = n2o_cf                                        #conversion factor of CH4 to CO2eq [adimensional] (float)
         
-    def total_GHG_emissions(phase, quantity, n, co2_emissions, ch4_emissions, ch4_cf, n2o_emissions, n2o_cf):
+    def total_GHG_emissions(self, durations):
         """
         Calculates the total GHG emissions for 1 element in this class
         """
-        total_fuel = quantity * n
-        CO2_totalemissions = total_fuel * co2_emissions 
-        CH4_totalemissions = total_fuel * ch4_emissions * ch4_cf
-        N2O_totalemissions = total_fuel * n2o_emissions * n2o_cf
+        total_fuel = self.quantity * self.n
+        CO2_totalemissions = total_fuel * self.co2_emissions 
+        CH4_totalemissions = total_fuel * self.ch4_emissions * self.ch4_cf
+        N2O_totalemissions = total_fuel * self.n2o_emissions * self.n2o_cf
         total_emissions = CO2_totalemissions + CH4_totalemissions + N2O_totalemissions
         
-        if Phase[phase] == Phase.CONSTRUCTION:
-            duration = float(ProjectPhasesService.project_duration()[0])
+        if Phase[self.phase] == Phase.CONSTRUCTION:
+            duration = float(durations[0])
             return total_emissions * duration
-        elif Phase[phase] == Phase.OPERATION:
-            duration = float(ProjectPhasesService.project_duration()[1])
+        elif Phase[self.phase] == Phase.OPERATION:
+            duration = float(durations[0])
+            
             return total_emissions * duration
     
     def to_dict(self):

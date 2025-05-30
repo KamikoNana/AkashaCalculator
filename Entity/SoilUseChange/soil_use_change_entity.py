@@ -13,13 +13,13 @@ class SoilUseChange:
         self.new_soiluse = new_soiluse                              #new soil use (str)
         self.new_seqfactor = new_seqfactor                          #new soil use CO2 sequestration factor [tCO2/year]
 
-    def total_GHG_emissions(area, prev_seqfactor, new_seqfactor):
+    def total_GHG_emissions(self):
         """
         Calculates the total GHG emissions for 1 element in this class
         - If this value is POSITIVE indicated that the new soil use sequestration factor is superior and so the change is beneficial
         """        
-        prev_emissions_seq = prev_seqfactor * area
-        new_emissions_seq = new_seqfactor * area
+        prev_emissions_seq = self.prev_seqfactor * self.area
+        new_emissions_seq = self.new_seqfactor * self.area
 
         return (prev_emissions_seq - new_emissions_seq)
     

@@ -15,16 +15,16 @@ class MaterialsProduction:
         self.quantity = quantity                                #quantity of material produced per year [kg/year] (float)
         self.ef = ef                                            #emission factor of the material production [tCO2eq/kg] (float)
     
-    def total_GHG_emissions(phase, quantity, ef):
+    def total_GHG_emissions(self, duration):
         """
         Calculates the total GHG emissions for 1 element in this class
         """        
-        if Phase[phase] == Phase.CONSTRUCTION:
-            duration = float(ProjectPhasesService.project_duration()[0])
-            return quantity * ef * duration
-        elif Phase[phase] == Phase.OPERATION:
-            duration = float(ProjectPhasesService.project_duration()[1])
-            return quantity * ef * duration
+        if Phase[self.phase] == Phase.CONSTRUCTION:
+            duration = float(duration[0])
+        elif Phase[self.phase] == Phase.OPERATION:
+            duration = float(duration[1])
+        
+        return self.quantity * self.ef * duration
     
     def to_dict(self):
         """

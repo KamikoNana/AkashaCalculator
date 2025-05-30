@@ -5,7 +5,6 @@ All variables are described in the Akasha Guidebook avaliable in the GitHub repo
 """
 
 from enum import Enum
-from Services.ProjectPhases.project_phases_service import ProjectPhasesService
 from Entity.ProjectPhases.project_phases_entity import Phase
 
 class EnergyType(Enum):
@@ -23,16 +22,17 @@ class Energy:
         self.quantity = quantity                            #quantity of energy used per year [MW/year] (float)
         self.ef = ef                                        #emission factor [tCO2/MW] (float)
     
-    def total_GHG_emissions(phase, quantity, ef):
+    def total_GHG_emissions(self, durations):
         """
         Calculates the total GHG emissions for 1 element in this class
         """
-        if Phase[phase] == Phase.CONSTRUCTION:
-            duration = float(ProjectPhasesService.project_duration()[0])
-            return quantity * ef * duration
-        elif Phase[phase] == Phase.OPERATION:
-            duration = float(ProjectPhasesService.project_duration()[1])
-            return quantity * ef * duration
+
+        if Phase[self.phase] == Phase.CONSTRUCTION:
+            duration = float(durations[0])
+        elif Phase[self.phase] == Phase.OPERATION:
+            duration = float(durations[1])
+            
+        return self.quantity * self.ef * duration
             
     def to_dict(self):
         """

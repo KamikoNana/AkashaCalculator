@@ -8,7 +8,7 @@ from enum import Enum
  
 class Phase(Enum):
     """
-    subclass to define the various project phases as enum variables
+    subclass to define the various project phases as enum variables 
     """
     CONSTRUCTION = 1
     OPERATION = 2

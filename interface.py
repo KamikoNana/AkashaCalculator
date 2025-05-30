@@ -12,11 +12,9 @@ from matplotlib.figure import Figure
 from fpdf import FPDF
 import os
 import pandas
+import importlib 
+import json
 
-file_path = "database_akasha.xlsx"
-xls = pandas.ExcelFile(file_path)
-app.create_objects(xls) 
-app.create_database()
 
 categories = ["All", "Energy", "Vehicles", "Combustion Machinery", "Materials", "Soil Use Change", "Waste Treatment"]
 
@@ -177,6 +175,7 @@ latest_figures = []
 latest_figure = None
 current_plot_index = 0
 
+
 while True:
     '''
     Loop to define the outputs to be displayed for each category
@@ -196,6 +195,12 @@ while True:
             continue
 
         try:
+            xls = pandas.ExcelFile(file_path)
+            app.create_objects(xls, file_path) 
+            app.create_database()
+            
+            app.init_calculations_services()
+            
             summary_text = ""
             figures = []
 
@@ -297,3 +302,4 @@ while True:
         export_full_pdf(report_title, latest_summary, latest_figures)
 
 window.close()
+

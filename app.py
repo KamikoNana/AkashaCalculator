@@ -6,6 +6,9 @@ More information can be found in the Akasha Guidebook avaliable in the GitHub re
 import pandas
 import matplotlib.pyplot as plt
 from itertools import zip_longest
+import json
+import os
+import sys
 
 from Entity.Combustion.fixed_comb_entity import FixedCombustion
 from Entity.Combustion.mobile_comb_entity import MobileCombustion
@@ -28,7 +31,7 @@ from Services.Vehicles.vehicles_calc_service import VehiclesCalculations
 from Services.WasteTreatm.waste_treatm_calc_service import WasteTreatmentCalculations
 
 '''
-1. Transition between excel and .py format databse
+1. Transition between excel and .json format databse
 - Creates new dictionaries for each emissions category
 - Transposes the information for each element from the excel to a dictionary
 - Creates the complete database with dictionaries (emissions catgory) of disctionaries (each element in that category)
@@ -44,10 +47,7 @@ materials_use = {}
 soil_use_change = {}
 waste_treatm = {}
 
-file_path = "database_akasha.xlsx"
-xls = pandas.ExcelFile(file_path)
-
-def create_objects(xls):
+def create_objects(xls, file_path):
     ''' 
     Get each element from the excel file and transposes into usable variables
     '''
@@ -168,7 +168,7 @@ def create_objects(xls):
       
 def create_database():
     '''
-    Creates the new .py file with the empty disctionaries for the emissions categories
+    Creates a JSON file with the emission data.
     '''
     data = {
         "project_phases": project_phases,
@@ -178,37 +178,57 @@ def create_database():
         "mobile_combustion": mobile_combustion,
         "materials_prod": materials_prod,
         "materials_use": materials_use,
-        "soil_use": soil_use_change,
+        "soil_use_change": soil_use_change,
         "waste_treatm": waste_treatm
     }
 
-    with open('ghg_database.py', 'w') as f:
-        f.write("'''This file contains GHG data imported from the excel file submited''' \n")
-        f.write("'''Please ensure the data provided in the excel file is correct'''\n\n")
-        
-        for dict_name, dict_data in data.items():
-            f.write(f"{dict_name} = {dict_data}\n\n")
+    with open('ghg_database.json', 'w') as f:        
+        json.dump(data, f, indent=4)
 
+def get_base_path():
+    if getattr(sys, 'frozen', False):  # If running as .exe
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))  # If running as .py
 
-create_objects(xls) 
-create_database()
+json_path = os.path.join(get_base_path(), 'ghg_database.json')
+json_path = os.path.abspath(json_path)  # Normalize the full path
+
+def init_calculations_services():
+    global energy_calculations
+    energy_calculations = EnergyCalculations(json_path)
+    global vehicles_calculations
+    vehicles_calculations = VehiclesCalculations(json_path)
+    global fixed_combustion_calculations
+    fixed_combustion_calculations = FixedCombustionCalculations(json_path)
+    global mobile_combustion_calculations
+    mobile_combustion_calculations = MobileCombustionCalculations(json_path)
+    global materials_production_calculations
+    materials_production_calculations = MaterialsProductionCalculations(json_path)
+    global materials_use_calculations
+    materials_use_calculations = MaterialsUseCalculations(json_path)
+    global soil_use_change_calculations
+    soil_use_change_calculations = SoilUseChangeCalculations(json_path)
+    global waste_treatment_calculations
+    waste_treatment_calculations = WasteTreatmentCalculations(json_path)
+    
 
 '''
 2. Functions to sum all values from all categories
 '''
 
+
 def sum_all_num():
     '''
     Sums all categories emissions, resulting the total emissions of the project (numeric)
     '''
-    energy = EnergyCalculations.total_emissions_energy()[0]
-    vehicles = VehiclesCalculations.total_emissions_vehicles_all()[0]
-    fixed_machinery = FixedCombustionCalculations.total_emissions_fixedcomb()[0]
-    mobile_machinery = MobileCombustionCalculations.total_emissions_mobilecomb()[0]
-    materials_production = MaterialsProductionCalculations.total_emissions_materialsprod()[0]
-    materials_use = MaterialsUseCalculations.total_emissions_materialsuse()[0]
-    soil = SoilUseChangeCalculations.total_emissions_soilusechange()[0]
-    waste = WasteTreatmentCalculations.total_emissions_waste_all()[0]
+    energy = energy_calculations.total_emissions_energy()[0]
+    vehicles = vehicles_calculations.total_emissions_vehicles_all()[0]
+    fixed_machinery = fixed_combustion_calculations.total_emissions_fixedcomb()[0]
+    mobile_machinery = mobile_combustion_calculations.total_emissions_mobilecomb()[0]
+    materials_production = materials_production_calculations.total_emissions_materialsprod()[0]
+    materials_use = materials_use_calculations.total_emissions_materialsuse()[0]
+    soil = soil_use_change_calculations.total_emissions_soilusechange()[0]
+    waste = waste_treatment_calculations.total_emissions_waste_all()[0]
     
     if soil > 0:
         total = energy + vehicles + fixed_machinery + mobile_machinery + materials_production + materials_use\
@@ -223,12 +243,12 @@ def sum_all_list():
     '''
     Sums all categories emissions, resulting the total commulative value for each year in the project horizon (list)
     '''
-    energy = EnergyCalculations.total_emissions_peryear_energy()
-    vehicles = VehiclesCalculations.total_emissions_peryear_vehicles_all()
-    fixed_machinery = FixedCombustionCalculations.total_emissions_peryear_fixedcomb()
-    mobile_machinery = MobileCombustionCalculations.total_emissions_peryear_mobilecomb()
-    materials_production = MaterialsProductionCalculations.total_emissions_peryear_materialsprod()
-    waste = WasteTreatmentCalculations.total_emissions_peryear_waste_all()
+    energy = energy_calculations.total_emissions_peryear_energy()
+    vehicles = vehicles_calculations.total_emissions_peryear_vehicles_all()
+    fixed_machinery = fixed_combustion_calculations.total_emissions_peryear_fixedcomb()
+    mobile_machinery = mobile_combustion_calculations.total_emissions_peryear_mobilecomb()
+    materials_production = materials_production_calculations.total_emissions_peryear_materialsprod()
+    waste = waste_treatment_calculations.total_emissions_peryear_waste_all()
     
     total = [sum(values) for values in zip_longest(
             energy, vehicles, fixed_machinery, mobile_machinery, materials_production, waste, fillvalue=0)]
@@ -254,8 +274,8 @@ def plot_total_peryear():
     return fig
     
 def plot_energy_peryear():
-    years = list(range(1, len(EnergyCalculations.total_emissions_peryear_energy()) + 1))
-    emissions = EnergyCalculations.total_emissions_peryear_energy()
+    years = list(range(1, len(energy_calculations.total_emissions_peryear_energy()) + 1))
+    emissions = energy_calculations.total_emissions_peryear_energy()
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -267,9 +287,79 @@ def plot_energy_peryear():
     
     return fig
 
+def plot_vehicles_all_peryear():
+    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_all()) + 1))
+    emissions = vehicles_calculations.total_emissions_peryear_vehicles_all()
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('All Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
+    ax.grid(True)
+    
+    return fig
+    
+def plot_vehicles_road_peryear():
+    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("ROAD")) + 1))
+    emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("ROAD")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('ROAD Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
+    ax.grid(True)
+    
+    return fig
+    
+def plot_vehicles_train_peryear():
+    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("TRAIN")) + 1))
+    emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("TRAIN")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('TRAIN Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
+    ax.grid(True)
+    
+    return fig
+    
+def plot_vehicles_ship_peryear():
+    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("SHIP")) + 1))
+    emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("SHIP")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('SHIP Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
+    ax.grid(True)
+    
+    return fig
+    
+def plot_vehicles_air_peryear():
+    years = list(range(1, len(vehicles_calculations.total_emissions_peryear_vehicles_type("AIR")) + 1))
+    emissions = vehicles_calculations.total_emissions_peryear_vehicles_type("AIR")
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
+
+    ax.set_title('AIR Vehicles - Cumulative Emissions Over Time')
+    ax.set_xlabel('Year')
+    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
+    ax.grid(True)
+    
+    return fig
+
 def plot_fixedcomb_peryear():
-    years = list(range(1, len(FixedCombustionCalculations.total_emissions_peryear_fixedcomb()) + 1))
-    emissions = FixedCombustionCalculations.total_emissions_peryear_fixedcomb()
+    years = list(range(1, len(fixed_combustion_calculations.total_emissions_peryear_fixedcomb()) + 1))
+    emissions = fixed_combustion_calculations.total_emissions_peryear_fixedcomb()
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -282,8 +372,8 @@ def plot_fixedcomb_peryear():
     return fig
 
 def plot_mobilecomb_peryear():
-    years = list(range(1, len(MobileCombustionCalculations.total_emissions_peryear_mobilecomb()) + 1))
-    emissions = MobileCombustionCalculations.total_emissions_peryear_mobilecomb()
+    years = list(range(1, len(mobile_combustion_calculations.total_emissions_peryear_mobilecomb()) + 1))
+    emissions = mobile_combustion_calculations.total_emissions_peryear_mobilecomb()
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -296,8 +386,8 @@ def plot_mobilecomb_peryear():
     return fig
 
 def plot_materialsprod_peryear():
-    years = list(range(1, len(MaterialsProductionCalculations.total_emissions_peryear_materialsprod()) + 1))
-    emissions = MaterialsProductionCalculations.total_emissions_peryear_materialsprod()
+    years = list(range(1, len(materials_production_calculations.total_emissions_peryear_materialsprod()) + 1))
+    emissions = materials_production_calculations.total_emissions_peryear_materialsprod()
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -312,80 +402,10 @@ def plot_materialsprod_peryear():
 ## materials used do not have a plot because it's measured in total quantities
 
 ## soil use change do not have a plot because it's measured in a form of total balance
-
-def plot_vehicles_all_peryear():
-    years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_all()) + 1))
-    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_all()
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
-
-    ax.set_title('All Vehicles - Cumulative Emissions Over Time')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
-    ax.grid(True)
-    
-    return fig
-    
-def plot_vehicles_road_peryear():
-    years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("ROAD")) + 1))
-    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("ROAD")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
-
-    ax.set_title('ROAD Vehicles - Cumulative Emissions Over Time')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
-    ax.grid(True)
-    
-    return fig
-    
-def plot_vehicles_train_peryear():
-    years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("TRAIN")) + 1))
-    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("TRAIN")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
-
-    ax.set_title('TRAIN Vehicles - Cumulative Emissions Over Time')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
-    ax.grid(True)
-    
-    return fig
-    
-def plot_vehicles_ship_peryear():
-    years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("SHIP")) + 1))
-    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("SHIP")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
-
-    ax.set_title('SHIP Vehicles - Cumulative Emissions Over Time')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
-    ax.grid(True)
-    
-    return fig
-    
-def plot_vehicles_air_peryear():
-    years = list(range(1, len(VehiclesCalculations.total_emissions_peryear_vehicles_type("AIR")) + 1))
-    emissions = VehiclesCalculations.total_emissions_peryear_vehicles_type("AIR")
-
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(years, emissions, marker='o', linestyle='-', color='g')
-
-    ax.set_title('AIR Vehicles - Cumulative Emissions Over Time')
-    ax.set_xlabel('Year')
-    ax.set_ylabel('Cumulative Emissions (tonCO2eq)')
-    ax.grid(True)
-    
-    return fig
     
 def plot_waste_all_peryear():
-    years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_all()) + 1))
-    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_all()
+    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_all()) + 1))
+    emissions = waste_treatment_calculations.total_emissions_peryear_waste_all()
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -398,8 +418,8 @@ def plot_waste_all_peryear():
     return fig
     
 def plot_waste_solids_peryear():
-    years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("WATER")) + 1))
-    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("WATER")
+    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("WATER")) + 1))
+    emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("WATER")
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -412,8 +432,8 @@ def plot_waste_solids_peryear():
     return fig
 
 def plot_waste_water_peryear():
-    years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("SOLID")) + 1))
-    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("SOLID")
+    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("SOLID")) + 1))
+    emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("SOLID")
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -426,8 +446,8 @@ def plot_waste_water_peryear():
     return fig
 
 def plot_waste_gas_peryear():
-    years = list(range(1, len(WasteTreatmentCalculations.total_emissions_peryear_waste_type("GAS")) + 1))
-    emissions = WasteTreatmentCalculations.total_emissions_peryear_waste_type("GAS")
+    years = list(range(1, len(waste_treatment_calculations.total_emissions_peryear_waste_type("GAS")) + 1))
+    emissions = waste_treatment_calculations.total_emissions_peryear_waste_type("GAS")
 
     fig, ax = plt.subplots(figsize=(10, 6))
     ax.plot(years, emissions, marker='o', linestyle='-', color='g')
@@ -454,8 +474,8 @@ def show_total():
     return show
     
 def show_energy():
-    all = EnergyCalculations.total_emissions_energy()[0]
-    balance = EnergyCalculations.GHG_emissions_saved_energy()[0]
+    all = energy_calculations.total_emissions_energy()[0]
+    balance = energy_calculations.GHG_emissions_saved_energy()[0]
     
     show = (
         "ENERGY GHG Emissions \n"
@@ -467,11 +487,11 @@ def show_energy():
 
     
 def show_vehicles():
-    all = VehiclesCalculations.total_emissions_vehicles_all()[0]
-    road = VehiclesCalculations.total_emissions_vehicles_type("ROAD")[0]
-    train = VehiclesCalculations.total_emissions_vehicles_type("AIR")[0]
-    ship = VehiclesCalculations.total_emissions_vehicles_type("TRAIN")[0]
-    air = VehiclesCalculations.total_emissions_vehicles_type("SHIP")[0]
+    all = vehicles_calculations.total_emissions_vehicles_all()[0]
+    road = vehicles_calculations.total_emissions_vehicles_type("ROAD")[0]
+    train = vehicles_calculations.total_emissions_vehicles_type("AIR")[0]
+    ship = vehicles_calculations.total_emissions_vehicles_type("TRAIN")[0]
+    air = vehicles_calculations.total_emissions_vehicles_type("SHIP")[0]
     
     show = (
         "VEHICLES GHG Emissions \n"
@@ -485,9 +505,9 @@ def show_vehicles():
     return show
 
 def show_combustionmachinery():
-    all = FixedCombustionCalculations.total_emissions_fixedcomb()[0] + MobileCombustionCalculations.total_emissions_mobilecomb()[0]
-    fixed = FixedCombustionCalculations.total_emissions_fixedcomb()[0]
-    mobile = MobileCombustionCalculations.total_emissions_mobilecomb()[0]
+    all = fixed_combustion_calculations.total_emissions_fixedcomb()[0] + mobile_combustion_calculations.total_emissions_mobilecomb()[0]
+    fixed = fixed_combustion_calculations.total_emissions_fixedcomb()[0]
+    mobile = mobile_combustion_calculations.total_emissions_mobilecomb()[0]
     
     show = (
         "COMBUSTION MACHINERY GHG Emissions \n"
@@ -499,8 +519,8 @@ def show_combustionmachinery():
     return show
 
 def show_materials():
-    used = MaterialsUseCalculations.total_emissions_materialsuse()[0]
-    produced = MaterialsProductionCalculations.total_emissions_materialsprod()[0]
+    used = materials_use_calculations.total_emissions_materialsuse()[0]
+    produced = materials_production_calculations.total_emissions_materialsprod()[0]
     
     show= (
         "MATERIALS GHG Emissions \n"
@@ -511,7 +531,7 @@ def show_materials():
     return show
 
 def show_soilusechange():
-    all = SoilUseChangeCalculations.total_emissions_soilusechange()[0]
+    all = soil_use_change_calculations.total_emissions_soilusechange()[0]
     
     show = (
         "SOIL USE CHANGE GHG Emissions \n"
@@ -521,10 +541,10 @@ def show_soilusechange():
     return show
 
 def show_wastetreatment():
-    all = WasteTreatmentCalculations.total_emissions_waste_all()[0]
-    water = WasteTreatmentCalculations.total_emissions_waste_type('WATER')[0]
-    solid = WasteTreatmentCalculations.total_emissions_peryear_waste_type('SOLID')[0]
-    gas = WasteTreatmentCalculations.total_emissions_waste_type('GAS')[0]
+    all = waste_treatment_calculations.total_emissions_waste_all()[0]
+    water = waste_treatment_calculations.total_emissions_waste_type('WATER')[0]
+    solid = waste_treatment_calculations.total_emissions_peryear_waste_type('SOLID')[0]
+    gas = waste_treatment_calculations.total_emissions_waste_type('GAS')[0]
     
     show = (
         "All WASTE TREATMENT GHG Emissions \n"

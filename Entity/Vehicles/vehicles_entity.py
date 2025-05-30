@@ -30,22 +30,22 @@ class Vehicles:
         self.n2o_emissions = n2o_emissions                              #emissions of the fuel use [kgN2O/km] (float)
         self.n2o_cf = n2o_cf                                            #conversion factor of CH4 to CO2eq [adimensional] (float)
 
-    def total_GHG_emissions(phase, km, n, co2_emissions, ch4_emissions, ch4_cf, n2o_emissions, n2o_cf):
+    def total_GHG_emissions(self, duration):
         """
         Calculates the total GHG emissions for 1 element in this class
         """
-        total_distance = km * n
-        CO2_totalemissions = co2_emissions 
-        CH4_totalemissions = ch4_emissions * ch4_cf
-        N2O_totalemissions = n2o_emissions * n2o_cf
+        total_distance = self.km * self.n
+        CO2_totalemissions = self.co2_emissions 
+        CH4_totalemissions = self.ch4_emissions * self.ch4_cf
+        N2O_totalemissions = self.n2o_emissions * self.n2o_cf
         total_emissions = (CO2_totalemissions + CH4_totalemissions + N2O_totalemissions) * total_distance
         
-        if Phase[phase] == Phase.CONSTRUCTION:
-            duration = float(ProjectPhasesService.project_duration()[0])
-            return total_emissions * duration
-        elif Phase[phase] == Phase.OPERATION:
-            duration = float(ProjectPhasesService.project_duration()[1])
-            return total_emissions * duration
+        if Phase[self.phase] == Phase.CONSTRUCTION:
+            duration = float(duration[0])
+        elif Phase[self.phase] == Phase.OPERATION:
+            duration = float(duration[1])
+            
+        return total_emissions * duration
     
     def to_dict(self):
         """

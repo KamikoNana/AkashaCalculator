@@ -6,7 +6,6 @@ All variables are described in the Akasha Guidebook avaliable in the GitHub repo
 """
 
 from Entity.Combustion.combustion_eng_entity import CombustionEnginery
-from Services.ProjectPhases.project_phases_service import ProjectPhasesService
 from Entity.ProjectPhases.project_phases_entity import Phase
 
 class FixedCombustion(CombustionEnginery):
@@ -14,19 +13,19 @@ class FixedCombustion(CombustionEnginery):
         super().__init__(phase, enginery_fueltype, quantity, n)
         self.ef = ef                                                #emission factor [tCO2/L] (float)
         
-    def total_GHG_emissions(phase, quantity, n, ef):
+    def total_GHG_emissions(self, durations):
         """
         Calculates the total GHG emissions for 1 element in this class
         """
-        total_fuel = quantity * n
+        total_fuel = self.quantity * self.n
         
-        if Phase[phase] == Phase.CONSTRUCTION:
-            duration = float(ProjectPhasesService.project_duration()[0])
-            return total_fuel * ef * duration
-        elif Phase[phase] == Phase.OPERATION:
-            duration = float(ProjectPhasesService.project_duration()[1])
-            return total_fuel * ef * duration
-        
+        if Phase[self.phase] == Phase.CONSTRUCTION:
+            duration = float(durations[0])
+        elif Phase[self.phase] == Phase.OPERATION:
+            duration = float(durations[1])
+            
+        return total_fuel * self.ef * duration
+       
     
     def to_dict(self):
         """

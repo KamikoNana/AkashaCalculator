@@ -12,11 +12,11 @@ class MaterialsUse:
         self.quantity = quantity                        #quantity of material used in total [kg] (float)
         self.ef = ef                                    #emission factor of the material production [tCO2eq/kg] (float)
     
-    def total_GHG_emissions(phase, material, quantity, ef):
+    def total_GHG_emissions(self):
         """
         Calculates the total GHG emissions for 1 element in this class
         """        
-        return quantity * ef
+        return self.quantity * self.ef
     
     def to_dict(self):
         """
